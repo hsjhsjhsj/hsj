@@ -1,0 +1,1 @@
+数据库生成实体类命令:mvn mybatis-generator:generate
