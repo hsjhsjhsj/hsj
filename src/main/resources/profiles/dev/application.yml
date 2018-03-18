@@ -8,5 +8,9 @@ spring:
     url: jdbc:mysql://192.168.2.231:3306/apps?useUnicode=true&characterEncoding=utf-8&useSSL=false
     username: root
     password: mysql
+  redis:
+    host: 192.168.2.195
+    port: 6379
+    database: 0  
 server:
   port: 9090
