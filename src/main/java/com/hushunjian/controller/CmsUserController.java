@@ -20,7 +20,7 @@ import com.hushunjian.service.CmsUserService;
 public class CmsUserController extends BaseController {
 	
 	@Autowired
-	private CmsUserService service;
+	private CmsUserService service;   
 	
     @ResponseBody
     @RequestMapping(value = "getAllUsers")
