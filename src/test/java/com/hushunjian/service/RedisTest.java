@@ -17,10 +17,11 @@ public class RedisTest {
 	@org.junit.Test
 	public void redisTest(){
 		System.out.println("开始测试");
-		//redisService.set("aa", "AA");
+		redisService.set("aa", "AA");
+		System.out.println("redis存储完毕");
+		System.out.println("=======================");
 		redisService.get("aa");
-		//System.out.println("redis存储完毕");
-		System.out.println("redis获取完成"+redisService.get("aa"));
+		System.out.println("redis获取完成======="+redisService.get("aa"));
 	}
 	
 }
