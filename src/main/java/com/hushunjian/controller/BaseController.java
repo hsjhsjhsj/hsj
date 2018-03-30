@@ -9,7 +9,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-public class BaseController {
+public class BaseController {  
     public Logger logger = LoggerFactory.getLogger(this.getClass());
     private static String STATUS = "status";
     private static String BODY = "body";
