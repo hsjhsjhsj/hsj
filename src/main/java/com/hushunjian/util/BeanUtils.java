@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BeanUtils {
+public class BeanUtils {  
 	//Map转换为JavaBean
 	public static <T> T map2bean(Map<String,Object> map,Class<T> clz){
 		//创建JavaBean对象
