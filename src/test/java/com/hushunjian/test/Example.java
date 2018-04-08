@@ -16,6 +16,9 @@ public class Example {
         	}
         	System.out.println();
         }
+        System.out.println("============111===========");
+        String[] arr = {"1","2","3"};
+        System.out.println(arr[arr.length-1]);
     }
     public void change(String str, char ch[]) {
         str = "test ok";
