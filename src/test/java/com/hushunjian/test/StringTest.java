@@ -18,6 +18,11 @@ public class StringTest {
         String str3 = "iosaaa";
         String str4 = filter(str3);
         System.out.println(str4);
+        System.out.println("888888888888888888");
+        String key = "FD9CAD10A58146D1825FA9E48F431437";
+        StringBuffer sb = new StringBuffer();
+        sb.append(key.substring(0, 4)).append("******").append(key.substring(key.length()-4, key.length()));
+        System.out.println(sb.toString());
 	}
 	
 	public static String filter(String str) {
@@ -28,4 +33,5 @@ public class StringTest {
 		}
 		return null;
 	}
+	
 }
