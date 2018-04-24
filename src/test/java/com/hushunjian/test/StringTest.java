@@ -2,6 +2,8 @@ package com.hushunjian.test;
 
 import java.util.regex.Pattern;
 
+import org.codehaus.groovy.util.StringUtil;
+
 public class StringTest {
 	public static void main(String[] args) {
 		String s1 = "Programming";
@@ -23,6 +25,10 @@ public class StringTest {
         StringBuffer sb = new StringBuffer();
         sb.append(key.substring(0, 4)).append("******").append(key.substring(key.length()-4, key.length()));
         System.out.println(sb.toString());
+        System.out.println("PPPPPPPPPPPPPPPPPPPP");
+        String a ="       ";
+        System.out.println(a.isEmpty());
+        System.out.println();
 	}
 	
 	public static String filter(String str) {
