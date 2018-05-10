@@ -247,7 +247,11 @@ rpm -ivh mysql-community-server-5.7.22-1.el7.x86_64.rpm
 	iptables -F
 18，使用工具连接mysql
 
+在项目启动时获取到所有的url
+https://blog.csdn.net/lwwgtm/article/details/60463249
 
+在项目启动时获取到所有的自定义注解
+https://blog.csdn.net/qianyiyiding/article/details/77150864
 
 
 
