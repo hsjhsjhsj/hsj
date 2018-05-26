@@ -254,6 +254,30 @@ https://blog.csdn.net/lwwgtm/article/details/60463249
 https://blog.csdn.net/qianyiyiding/article/details/77150864
 
 
+eclipse中字母大小写转换快捷键
+
+ctrl+shift+x   转为大写    
+
+ctrl+shift+y   转为小写
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
