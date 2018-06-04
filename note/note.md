@@ -260,7 +260,7 @@ ctrl+shift+x   转为大写
 
 ctrl+shift+y   转为小写
 
-
+mapstruct添加null判断@Mapper(nullValueCheckStrategy=NullValueCheckStrategy.ALWAYS)
 
 
 
