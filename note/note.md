@@ -263,8 +263,21 @@ ctrl+shift+y   转为小写
 mapstruct添加null判断@Mapper(nullValueCheckStrategy=NullValueCheckStrategy.ALWAYS)
 		 将一个类中的属性值拷贝到另一个类中 void copyProperties(UpdateMeetingVO updateMeetingVO,@MappingTarget MeetingManageEntity meetingManage);
 
+在gradle中创建文件夹
+task createJavaProject << {  
+    sourceSets*.java.srcDirs*.each { it.mkdirs() }  
+    sourceSets*.resources.srcDirs*.each { it.mkdirs()}  
+}  
+  
+task createWebProject(dependsOn: 'createJavaProject') << {  
+  def webAppDir = file("$webAppDirName")  
+  def libDir = webAppDir/WEB-INF  
+  webAppDir.mkdirs()  
+  libDir.mkdirs()  
+} 
 
-
+创建普通Java项目：gradle createJavaProject
+创建web项目：gradle createWebProject
 
 
 

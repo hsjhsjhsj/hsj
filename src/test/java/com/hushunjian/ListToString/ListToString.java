@@ -3,6 +3,8 @@ package com.hushunjian.ListToString;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class ListToString {
 	public static void main(String[] args) {
 		List<String> strs = new ArrayList<String>();
@@ -13,9 +15,7 @@ public class ListToString {
 		strs.add("11111");
 		strs.add("111111");
 		strs.add("1111111");
-		StringBuffer a = new StringBuffer(strs.toString());
-		a.replace(0, 1, "(");
-		a.replace(a.length()-1, a.length(), ")");
-		System.out.println(a.toString());
+		String a = StringUtils.join(strs.toArray(), "','");
+		System.out.println(a);
 	}
 }
