@@ -282,6 +282,7 @@ task createWebProject(dependsOn: 'createJavaProject') << {
 
 
 jpa动态查询参考网址:http://blog.51cto.com/jueshizhanhun/1221791
+http://www.importnew.com/24514.html
 
 
 
