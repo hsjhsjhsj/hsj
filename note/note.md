@@ -285,8 +285,11 @@ jpa动态查询参考网址:http://blog.51cto.com/jueshizhanhun/1221791
 http://www.importnew.com/24514.html
 
 
+mapstruct ieda 
+https://stackoverflow.com/questions/38947569/mapstruct-and-gradle-configuratoin-issue-in-intellij-idea
 
-
+mapstruct eclipse 
+https://stackoverflow.com/questions/45518161/how-to-get-eclipse-to-generate-mapstruct-mappers-using-gradle
 
 
 
