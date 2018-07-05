@@ -293,6 +293,11 @@ https://stackoverflow.com/questions/45518161/how-to-get-eclipse-to-generate-maps
 
 
 
+jpa  根据方法名查询 
+https://www.cnblogs.com/toSeeMyDream/p/6170790.html
+
+
+
 
 
 

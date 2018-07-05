@@ -21,7 +21,7 @@ public class GroupByTest {
 		this.age = age;
 	}
 	
-	
+	//List<String> planDetailIds=productionPlanDetails.stream().map(ProductionPlanDetailEntity::getId).collect(Collectors.toList());
 	
 	public static void main(String[] args) {
 		List<GroupByTest> groupByTests = Lists.newArrayList(
