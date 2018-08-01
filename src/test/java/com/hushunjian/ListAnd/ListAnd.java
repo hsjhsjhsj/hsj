@@ -1,6 +1,9 @@
 package com.hushunjian.ListAnd;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ListAnd {
@@ -14,10 +17,40 @@ public class ListAnd {
 		l2.add("3");
 		l2.add("4");
 		l1.retainAll(l2);
-		System.out.println(l1.toString());
-		System.out.println(l2.toString());
+		//System.out.println(l1.toString());
+		//System.out.println(l2.toString());
 		/*List<String> res = getIntersection(l1,l2);
 		System.out.println(res.toString());*/
+		
+		System.out.println("=============================");
+		List<String> originalPersonId1 = new ArrayList<>();
+		originalPersonId1.add("张三");
+		originalPersonId1.add("李四");
+		originalPersonId1.add("田七");
+		originalPersonId1.add("赵六");
+		List<String> originalPersonId2 = new ArrayList<>();
+		originalPersonId2.add("张三");
+		originalPersonId2.add("李四");
+		originalPersonId2.add("田七");
+		originalPersonId2.add("赵六");
+		List<String> newPersonId1 = new ArrayList<>();
+		newPersonId1.add("张三");
+		newPersonId1.add("王五");
+		newPersonId1.add("赵六");
+		List<String> newPersonId2 = new ArrayList<>();
+		newPersonId2.add("张三");
+		newPersonId2.add("王五");
+		newPersonId2.add("赵六");
+		originalPersonId1.retainAll(newPersonId1);
+		System.out.println("发送会议修改消息:"+originalPersonId1.toString());
+		originalPersonId2.removeAll(newPersonId1);
+		System.out.println("发送移除人员消息:"+originalPersonId2.toString());
+		newPersonId2.removeAll(originalPersonId1);
+		System.out.println("发送会议邀请消息:"+newPersonId2.toString());
+		
+		LocalDateTime a = LocalDateTime.now();
+		System.out.println(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+		
 	}
 	
 	public static List<String> getIntersection(List<String> list1,

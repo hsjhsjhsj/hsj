@@ -15,13 +15,13 @@ public class InsertSql {
 			String id = UUID.randomUUID().toString().replaceAll("-", "");
 			StringBuffer insertParent = new StringBuffer("INSERT INTO `PF_REBAR_POSITION_T` VALUES ('");
 			insertParent.append(id).append("', 0, NULL ,'").append(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())).append("',");
-			insertParent.append(" NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, ").append(i).append(", NULL, '").append(i).append("#生产线', 'GJTW").append(i).append("');");
+			insertParent.append(" NULL, NULL, NULL, NULL, NULL, 0, NULL, 0, NULL, ").append(i).append(", NULL, '").append(i).append("#生产线', 'GJTW").append(i).append("');");
 			rebarSql.add(insertParent.toString());
 			for(int j = 1;j<=8;j++){
 				String childId = UUID.randomUUID().toString().replaceAll("-", "");
 				StringBuffer insertChild = new StringBuffer("INSERT INTO `PF_REBAR_POSITION_T` VALUES ('");
 				insertChild.append(childId).append("', 0, NULL ,'").append(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())).append("',");
-				insertChild.append(" NULL, NULL, NULL, NULL, NULL, 0, 1, NULL, ").append(j).append(", '").append(id).append("', '").append(j).append("#钢筋绑扎胎位', 'GJBZTW").append(i).append("-").append(j).append("');");
+				insertChild.append(" NULL, NULL, NULL, NULL, NULL, 0, NULL, 1, NULL, ").append(j).append(", '").append(id).append("', '").append(j).append("#钢筋绑扎胎位', 'GJBZTW").append(i).append("-").append(j).append("');");
 				rebarSql.add(insertChild.toString());
 			}
 		}
@@ -60,28 +60,28 @@ public class InsertSql {
 			String id1 = UUID.randomUUID().toString().replaceAll("-", "");
 			StringBuffer insertParent1 = new StringBuffer("INSERT INTO `PF_STORAGE_PEDESTAL_T` VALUES ('");
 			insertParent1.append(id1).append("', 0, NULL, '").append(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())).append("',");
-			insertParent1.append(" NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, ").append(i).append(", NULL, '").append(i).append("区', '").append("CLTZ").append(i).append("');");
+			insertParent1.append(" NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, ").append(i).append(", NULL, '").append(i).append("区', '").append("CLTZ").append(i).append("', NULL);");
 			storagePedestalSql.add(insertParent1.toString());
 			for(int j=1;j<=3;j++){
 				//第1块
 				String id2 = UUID.randomUUID().toString().replaceAll("-", "");
 				StringBuffer insertParent2 = new StringBuffer("INSERT INTO `PF_STORAGE_PEDESTAL_T` VALUES ('");
 				insertParent2.append(id2).append("', 0, NULL, '").append(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())).append("',");
-				insertParent2.append(" NULL, NULL, NULL, NULL, NULL, 1, 0, NULL, ").append(j).append(", '").append(id1).append("', '第").append(j).append("块', 'CLTZ").append(i).append("-").append(j).append("');");
+				insertParent2.append(" NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, ").append(j).append(", '").append(id1).append("', '第").append(j).append("块', 'CLTZ").append(i).append("-").append(j).append("', NULL);");
 				storagePedestalSql.add(insertParent2.toString());
 				for(int k=1;k<=3;k++){
 					//第1列
 					String id3 = UUID.randomUUID().toString().replaceAll("-", "");
 					StringBuffer insertParent3 = new StringBuffer("INSERT INTO `PF_STORAGE_PEDESTAL_T` VALUES ('");
 					insertParent3.append(id3).append("', 0, NULL, '").append(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())).append("',");
-					insertParent3.append(" NULL, NULL, NULL, NULL, NULL, 2, 0, NULL, ").append(k).append(", '").append(id2).append("', '第").append(k).append("列', 'CLTZ").append(i).append("-").append(j).append("-").append(k).append("');");
+					insertParent3.append(" NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 0, ").append(k).append(", '").append(id2).append("', '第").append(k).append("列', 'CLTZ").append(i).append("-").append(j).append("-").append(k).append("', NULL);");
 					storagePedestalSql.add(insertParent3.toString());
 					for(int z=1;z<=30;z++){
 						//存梁台座
 						String id4 = UUID.randomUUID().toString().replaceAll("-", "");
 						StringBuffer insertChild = new StringBuffer("INSERT INTO `PF_STORAGE_PEDESTAL_T` VALUES ('");
 						insertChild.append(id4).append("', 0, NULL, '").append(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())).append("',");
-						insertChild.append(" NULL, NULL, NULL, NULL, NULL, 3, 0, NULL, ").append(z).append(", '").append(id3).append("', '").append(z).append("#存梁台座', 'CLTZ").append(i).append("-").append(j).append("-").append(k).append("-").append(z).append("');");
+						insertChild.append(" NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, 0, ").append(z).append(", '").append(id3).append("', '").append(z).append("#存梁台座', 'CLTZ").append(i).append("-").append(j).append("-").append(k).append("-").append(z).append("', NULL);");
 						storagePedestalSql.add(insertChild.toString());
 					}
 				}
