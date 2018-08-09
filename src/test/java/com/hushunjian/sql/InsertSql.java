@@ -94,3 +94,8 @@ public class InsertSql {
 		System.out.println("## ==========存梁台座sql结束==========");
 	}
 }
+
+
+
+
+

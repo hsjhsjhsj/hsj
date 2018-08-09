@@ -297,10 +297,83 @@ jpa  根据方法名查询
 https://www.cnblogs.com/toSeeMyDream/p/6170790.html
 
 
+date  ZondateTime LocalDateTime 之间的相互转换
+https://www.cnblogs.com/niceboat/p/7027394.html
+//Date转Instant
+Instant dateInstant = date.toInstant();
+//Timestamp转Instant
+Instant timestampInstant = timestamp.toInstant();
+//Calendar转Instant
+Instant calendarInstant = calendar.toInstant();
+//LocalDateTime转Instant
+Instant localDateTimeInstant = localDateTime.toInstant(ZoneOffset.of(ZoneId.systemDefault().getId()));
+//ZonedDateTime转Instant
+Instant zonedDateTimeInstant = zonedDateTime.toInstant();
+
+
+//Date转LocalDateTime
+LocalDateTime dateLocalDateTime = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+//Timestamp转LocalDateTime
+LocalDateTime timestampLocalDateTime = timestamp.toLocalDateTime();
+//Calendar转LocalDateTime
+LocalDateTime calendarLocalDateTime = LocalDateTime.ofInstant(calendar.toInstant(), ZoneOffset.systemDefault());
+//Instant转LocalDateTime
+LocalDateTime instantLocalDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+//ZonedDateTime转LocalDateTime
+LocalDateTime zonedDateTimeLocalDateTime = zonedDateTime.toLocalDateTime();
+    
+    
+//Date转ZonedDateTime
+ZonedDateTime dateZonedDateTime = ZonedDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+//Timestamp转ZonedDateTime
+ZonedDateTime timestampZonedDateTime = ZonedDateTime.ofInstant(timestamp.toInstant(), ZoneId.systemDefault());
+//Calendar转ZonedDateTime
+ZonedDateTime calendarZonedDateTime = ZonedDateTime.ofInstant(calendar.toInstant(), ZoneId.systemDefault());
+//Instant转ZonedDateTime
+ZonedDateTime instantZonedDateTime = instant.atZone(ZoneId.systemDefault());
+//LocalDateTime转ZonedDateTime
+ZonedDateTime localDateTimeZonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
+
+//Timestamp转Date
+Date timestampDate = new Date(timestamp.getTime());
+//Calendar转Date
+Date calendarDate = calendar.getTime();
+//Instant转Date
+Date instantDate = Date.from(instant);
+//LocalDateTime转Date
+Date localDateTimeDate = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+//ZonedDateTime转Date
+Date zonedDateTimeDate = Date.from(zonedDateTime.toInstant());
+
+
+//Date转Timestamp
+Timestamp dateTimestamp = new Timestamp(date.getTime());
+//Calendar转Timestamp
+Timestamp calendarTimestamp = new Timestamp(calendar.getTimeInMillis());
+//Instant转Timestamp
+Timestamp instantTimestamp = Timestamp.from(instant);
+//LocalDateTime转Timestamp
+Timestamp localDateTimeTimestamp = Timestamp.valueOf(localDateTime);
+//ZonedDateTime转Timestamp
+Timestamp zonedDateTimeTimestamp = Timestamp.from(zonedDateTime.toInstant());
 
 
 
-
+//Date转Calendar
+Calendar dateCalendar = Calendar.getInstance();
+dateCalendar.setTime(date);
+//Timestamp转Calendar
+Calendar timestampCalendar = Calendar.getInstance();
+timestampCalendar.setTimeInMillis(timestamp.getTime());
+//Instant转Calendar
+Calendar instantCalendar = GregorianCalendar.from(ZonedDateTime.ofInstant(instant, ZoneId.systemDefault()));
+//LocalDateTime转Calendar
+Calendar localDateTimeCalendar = GregorianCalendar.from(ZonedDateTime.of(localDateTime, ZoneId.systemDefault()));
+//ZonedDateTime转Calendar
+Calendar zonedDateTimeInstantCalendar = GregorianCalendar.from(zonedDateTime);
+    
+    
+    
 
 
 
