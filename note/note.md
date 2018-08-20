@@ -1,3 +1,5 @@
+http://www.cnblogs.com/yjmyzz/p/mybatis-generator-tutorial.html
+
 将项目上传至GitHub:
 git init
 git add .
