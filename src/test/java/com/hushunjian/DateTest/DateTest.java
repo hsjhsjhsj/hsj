@@ -2,10 +2,9 @@ package com.hushunjian.DateTest;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import org.apache.commons.lang3.time.DateUtils;
@@ -41,12 +40,22 @@ public class DateTest {
 		ZonedDateTime startOfYear = ZonedDateTime.now();
 		System.out.println(startOfYear.getYear());
 		System.out.println("=====================");
+		String date = "2018-8-10 9:20:50";
+		System.out.println(date);
+		Date stringToDate = DateUtils.parseDate(date, "yyyy-MM-dd HH:mm:ss");
+		ZonedDateTime processDate = ZonedDateTime.ofInstant(stringToDate.toInstant(), ZoneId.systemDefault());
+		System.out.println(processDate);
+		System.out.println("=====================");
 		
+		dateTest.test();
 	}
 	
 	
-	private void test(){
-		
+	private void test() throws ParseException{
+		ZonedDateTime t1 = ZonedDateTime.now();
+		String time1 = new SimpleDateFormat("yyyy-MM-dd").format(Date.from(t1.toInstant())) + " 23:59:59";
+		Date t2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(time1);
+		System.out.println(t2);
 	}
 	
 

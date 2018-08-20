@@ -35,6 +35,7 @@ yum install mysql-devel
 
 设置密码
 set password for 'root'@'localhost' =password('password');	
+https://blog.csdn.net/u010603691/article/details/50379282
 
 设置所有ip都可以访问数据库
 grant all privileges on *.* to root@'%'identified by 'mysql'
@@ -374,7 +375,7 @@ Calendar zonedDateTimeInstantCalendar = GregorianCalendar.from(zonedDateTime);
     
     
     
-
-
-
+使用 Jenkins 与 Sonar 集成对代码进行持续检测
+https://blog.csdn.net/qq_36871364/article/details/77770112
+https://www.jianshu.com/p/33f806749267
 

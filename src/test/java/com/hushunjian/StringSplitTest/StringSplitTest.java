@@ -30,6 +30,9 @@ public class StringSplitTest {
 		for(String str : strs){
 			
 		}
+		
+		System.out.println("==============================");
+		
 	}
 	
 }
