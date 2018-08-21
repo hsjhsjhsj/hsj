@@ -1,9 +1,6 @@
 package com.hushunjian.ListAnd;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class ListAnd {
@@ -48,8 +45,6 @@ public class ListAnd {
 		newPersonId2.removeAll(originalPersonId1);
 		System.out.println("发送会议邀请消息:"+newPersonId2.toString());
 		
-		LocalDateTime a = LocalDateTime.now();
-		System.out.println(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
 		
 	}
 	
