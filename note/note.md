@@ -1,4 +1,5 @@
 http://www.cnblogs.com/yjmyzz/p/mybatis-generator-tutorial.html
+mvn mybatis-generator:generate
 
 将项目上传至GitHub:
 git init
@@ -381,3 +382,11 @@ Calendar zonedDateTimeInstantCalendar = GregorianCalendar.from(zonedDateTime);
 https://blog.csdn.net/qq_36871364/article/details/77770112
 https://www.jianshu.com/p/33f806749267
 
+
+服务注册和发现：http://blog.didispace.com/springcloud1/
+服务消费：http://blog.didispace.com/springcloud2/
+服务熔断机制：http://blog.didispace.com/springcloud3/
+服务配置中心：http://blog.didispace.com/springcloud4/
+服务网关：http://blog.didispace.com/springcloud5/
+高可用服务注册中心：http://blog.didispace.com/springcloud6/
+消息总线：http://blog.didispace.com/springcloud7/
