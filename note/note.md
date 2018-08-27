@@ -11,7 +11,8 @@ git remote add origin https://github.com/hushunjian/hushunjian
 git pull origin master
 git push -u origin master
 
-        
+springboot  shiro 
+https://www.cnblogs.com/ll409546297/p/7815409.html        
 
 Linux环境下安装jdk:
 yum install java-1.8.0-openjdk* -y 
