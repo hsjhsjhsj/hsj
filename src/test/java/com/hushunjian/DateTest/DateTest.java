@@ -48,6 +48,7 @@ public class DateTest {
 		System.out.println("=====================");
 		
 		dateTest.test();
+		dateTest.test1();
 	}
 	
 	
@@ -58,6 +59,12 @@ public class DateTest {
 		System.out.println(t2);
 	}
 	
+	private void test1() throws ParseException{
+		Date date = new SimpleDateFormat("yyyy-MM-dd").parse("2020-08-05");
+		System.out.println(date);
+		ZonedDateTime endDate = ZonedDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+		System.out.println(endDate);
+	}
 
 
 	
