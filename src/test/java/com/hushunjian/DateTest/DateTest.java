@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.commons.lang3.time.DateUtils;
@@ -49,6 +50,7 @@ public class DateTest {
 		
 		dateTest.test();
 		dateTest.test1();
+		dateTest.test2();
 	}
 	
 	
@@ -66,6 +68,12 @@ public class DateTest {
 		System.out.println(endDate);
 	}
 
-
+	private void test2(){
+		System.out.println("test2");
+		Calendar calendar = Calendar.getInstance();
+		System.out.println(calendar.getFirstDayOfWeek());
+		System.out.println(calendar.getWeeksInWeekYear());
+		System.out.println(calendar.getWeekYear());
+	}
 	
 }
