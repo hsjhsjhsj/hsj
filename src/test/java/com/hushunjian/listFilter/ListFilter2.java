@@ -28,7 +28,7 @@ public class ListFilter2 {
 	private static final List<ListFilter2> list = new ArrayList<>();
 	
 	static{
-		list.add(new ListFilter2("A",null,""));
+		/*list.add(new ListFilter2("A",null,""));
 		list.add(new ListFilter2("A1", "A",""));
 		list.add(new ListFilter2("A2", "A",""));
 		list.add(new ListFilter2("A3", "A",""));
@@ -56,12 +56,15 @@ public class ListFilter2 {
 		list.add(new ListFilter2("B21", "B2",""));
 		list.add(new ListFilter2("B22", "B2",""));
 		list.add(new ListFilter2("B23", "B2",""));
-		list.add(new ListFilter2("B24", "B2",""));
+		list.add(new ListFilter2("B24", "B2",""));*/
 	}
 	
 	
 	public static void main(String[] args) {
-		List<ListFilter2> top1 = list.stream().filter(l -> StringUtils.isBlank(l.getParent())).collect(Collectors.toList());
+		System.out.println(list.size());
+		List<String> aa = list.stream().map(ListFilter2::getId).collect(Collectors.toList());
+		System.out.println(aa.size());
+		/*List<ListFilter2> top1 = list.stream().filter(l -> StringUtils.isBlank(l.getParent())).collect(Collectors.toList());
 		top1.forEach(l -> {
 			System.out.println("父级" + l.getId());
 			List<ListFilter2> collect = list.stream().filter(l1 -> StringUtils.equals(l.getId(), l1.getParent())).collect(Collectors.toList());
@@ -81,7 +84,7 @@ public class ListFilter2 {
 		}
 		aa.forEach(a -> {
 			System.out.println(a.getId()+"----"+a.getName());
-		});
+		});*/
 	}
 	
 	public static void getChild(String id,List<ListFilter2> chilids){

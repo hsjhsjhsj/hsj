@@ -10,4 +10,15 @@ public class User {
 	private Integer age;
 	
 	private Long id;
+
+	public User(String userName, Integer age, Long id) {
+		super();
+		this.userName = userName;
+		this.age = age;
+		this.id = id;
+	}
+
+	public User() {
+		super();
+	}
 }

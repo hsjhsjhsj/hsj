@@ -1,9 +1,13 @@
 package com.hushunjian.StringSplitTest;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
-
-import com.mysql.fabric.xmlrpc.base.Array;
+import java.util.Set;
 
 public class StringSplitTest {
 	public static void main(String[] args) {
@@ -50,6 +54,29 @@ public class StringSplitTest {
 		for(String parentPlanTaskOutLineNum : parentPlanTaskOutLineNums){
 			System.out.println(parentPlanTaskOutLineNum);
 		}
+		System.out.println("[==============================]");
+		System.out.println("[||||||||||||||||||||||||||||||]");
+		System.out.println("[==============================]");
+		Set<String> order = order("1,2,5,1,3,4,2");
+		for(String as : order){
+			System.out.println(as);
+		}
+		System.out.println("[==============================]");
+		System.out.println("[||||||||||||||||||||||||||||||]");
+		System.out.println("[==============================]");
+		List<String> aas = new ArrayList<>();
+		aas.add("1");
+		aas.add("12");
+		aas.add("13");
+		aas.add("14");
+		System.out.println(aas.indexOf("12d"));
+		
+	}
+	
+	public static Set<String> order(String string){
+		String[] split = string.split(",");
+		Set<String> set = new LinkedHashSet<>(Arrays.asList(split));
+		return set;
 	}
 	
 	public static String subString (String string){
