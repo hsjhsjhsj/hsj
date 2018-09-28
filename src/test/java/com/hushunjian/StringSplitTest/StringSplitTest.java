@@ -1,5 +1,7 @@
 package com.hushunjian.StringSplitTest;
 
+import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -47,8 +49,12 @@ public class StringSplitTest {
 		String cc = aa.substring(0, aa.length()-2);
 		System.out.println(cc);
 		System.out.println("[==============================]");
-		
-		//subString(aa);
+		System.out.println("[||||||||||||||||||||||||||||||]");
+		System.out.println("[==============================]");
+		subString(aa);
+		System.out.println("[==============================]");
+		System.out.println("[||||||||||||||||||||||||||||||]");
+		System.out.println("[==============================]");
 		StringSplitTest stringSplitTest = new StringSplitTest();
 		List<String> parentPlanTaskOutLineNums = stringSplitTest.getParentPlanTaskOutLineNum(aa,new ArrayList<>());
 		for(String parentPlanTaskOutLineNum : parentPlanTaskOutLineNums){
@@ -70,13 +76,22 @@ public class StringSplitTest {
 		aas.add("13");
 		aas.add("14");
 		System.out.println(aas.indexOf("12d"));
-		
+		System.out.println("[==============================]");
+		System.out.println("[||||||||||||||||||||||||||||||]");
+		System.out.println("[==============================]");
+		aa(BigDecimal.valueOf(0.0001));
 	}
 	
 	public static Set<String> order(String string){
 		String[] split = string.split(",");
 		Set<String> set = new LinkedHashSet<>(Arrays.asList(split));
 		return set;
+	}
+	
+	public static String aa(BigDecimal number){
+		String aa = NumberFormat.getInstance().format(number.longValue() * 100);
+		System.out.println(aa);
+		return aa;
 	}
 	
 	public static String subString (String string){

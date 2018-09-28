@@ -2,6 +2,7 @@ package com.hushunjian.listSort;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import com.hushunjian.testEquest.User;
@@ -25,10 +26,10 @@ public class ListSort {
 		
 		List<String> order = new ArrayList<String>();
 		order.add("张三1");
-		order.add("张三2");
 		order.add("张三3");
-		order.add("张三4");
+		order.add("张三2");
 		order.add("张三5");
+		order.add("张三4");
 		
 		List<User> users = new ArrayList<User>();
 		users.add(new User("张三1",11,1L));
@@ -36,7 +37,8 @@ public class ListSort {
 		users.add(new User("张三2",12,2L));
 		users.add(new User("张三5",15,5L));
 		users.add(new User("张三4",14,4L));
-		
+		//users.sort(Comparator.comparing(User::getUserName));
+		//System.out.println(users);
 		setListOrde(order,users);
 	}
 	
