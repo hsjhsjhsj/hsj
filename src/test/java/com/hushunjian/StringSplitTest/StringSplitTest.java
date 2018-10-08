@@ -11,6 +11,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class StringSplitTest {
 	public static void main(String[] args) {
 		String s1 = "";
@@ -80,6 +82,22 @@ public class StringSplitTest {
 		System.out.println("[||||||||||||||||||||||||||||||]");
 		System.out.println("[==============================]");
 		aa(BigDecimal.valueOf(0.0001));
+		System.out.println("[==============================]");
+		System.out.println("[||||||||||||-1-|||||||||||||||]");
+		System.out.println("[==============================]");
+		String as = "1.2.32.3.6.2.33.55";
+		List<String> allParent = getAllParent(as);
+		System.out.println(allParent);
+		System.out.println("[==============================]");
+		System.out.println("[||||||||||||-2-|||||||||||||||]");
+		System.out.println("[==============================]");
+		List<String> parentPlanTaskOutLineNum = getParentPlanTaskOutLineNum(as);
+		System.out.println(parentPlanTaskOutLineNum);
+		System.out.println("[==============================]");
+		System.out.println("[||||||||||||-3-|||||||||||||||]");
+		System.out.println("[==============================]");
+		String as1 = "56.25.3.25.2";
+		System.out.println(as1.split("\\.")[0] + "." + as1.split("\\.")[1]);
 	}
 	
 	public static Set<String> order(String string){
@@ -113,5 +131,28 @@ public class StringSplitTest {
         getParentPlanTaskOutLineNum(a,parentPlanTaskOutLineNums);
         return parentPlanTaskOutLineNums;
     }
-	
+    
+    private static List<String> getAllParent(String outLineNumber){
+    	List<String> all = new ArrayList<String>();
+    	// 分隔
+    	String[] split = outLineNumber.split("\\.");
+    	String as = "";
+    	for(String a : split){
+    		as = as + "." + a;
+    		// 去除最开始的.
+    		all.add(as.replaceFirst("\\.", ""));
+    	}
+    	return all;
+    }
+    
+    private static List<String> getParentPlanTaskOutLineNum(String currentOutLineNum) {
+        List<String> parentPlanTaskOutLineNum = new ArrayList<>();
+        String[] split = currentOutLineNum.split("\\.");
+        String parentOutLineNum = "";
+        for (int i = 0; i < split.length - 1; i++) {
+            parentOutLineNum = String.format("%s.%s", parentOutLineNum, split[i]);
+            parentPlanTaskOutLineNum.add(parentOutLineNum.replaceFirst("\\.", ""));
+        }
+        return parentPlanTaskOutLineNum;
+    }
 }
