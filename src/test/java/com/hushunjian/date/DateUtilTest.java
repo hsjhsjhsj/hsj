@@ -3,6 +3,8 @@ package com.hushunjian.date;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -13,6 +15,10 @@ public class DateUtilTest {
 		String time = "2018-9-29";
 		Date date = sdf.parse(time);
 		getWeekInCurrentMonth(date);
+		System.out.println("--------------------");
+		ZonedDateTime now = ZonedDateTime.now();
+		Instant aa = now.toInstant();
+		System.out.println(aa);
 	}
 	
 	private static void getWeekInCurrentMonth(Date currentDate){
