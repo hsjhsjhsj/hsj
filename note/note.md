@@ -3,7 +3,7 @@ mvn mybatis-generator:generate
 
 将项目上传至GitHub:
 git init
-git add .
+git add .  
 git commit -m "注释语句"
 git config --global user.email "hushunjian950420@163.com"
 git config --global user.name "hushunjian"

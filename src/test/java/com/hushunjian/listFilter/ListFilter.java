@@ -33,8 +33,11 @@ public class ListFilter {
 		list.add(new ListFilter("A22", "A2"));
 		list.add(new ListFilter("A23", "A2"));
 		list.add(new ListFilter("A24", "A2"));
+		list.add(new ListFilter("A241", "A24"));
+		list.add(new ListFilter("A231", "A23"));
+		list.add(new ListFilter("A232", "A23"));
 		
-		list.add(new ListFilter("B",null));
+/*		list.add(new ListFilter("B",null));
 		list.add(new ListFilter("B1", "B"));
 		list.add(new ListFilter("B2", "B"));
 		list.add(new ListFilter("B3", "B"));
@@ -46,24 +49,30 @@ public class ListFilter {
 		list.add(new ListFilter("B21", "B2"));
 		list.add(new ListFilter("B22", "B2"));
 		list.add(new ListFilter("B23", "B2"));
-		list.add(new ListFilter("B24", "B2"));
+		list.add(new ListFilter("B24", "B2"));*/
 	}
 	
 	
 	public static void main(String[] args) {
 		List<ListFilter> top1 = list.stream().filter(l -> StringUtils.isBlank(l.getParent())).collect(Collectors.toList());
-		top1.forEach(l -> {
+/*		top1.forEach(l -> {
 			System.out.println("父级" + l.getId());
 			List<ListFilter> collect = list.stream().filter(l1 -> StringUtils.equals(l.getId(), l1.getParent())).collect(Collectors.toList());
 			collect.forEach(a -> {
 				System.out.println("父级" + l.getId() + "的子级" + a.getId());
 			});
 		});
-		System.out.println("==================================");
+		System.out.println("===============1===============");
 		top1.forEach(l -> {
 			List<ListFilter> collect = list.stream().filter(l1 -> StringUtils.equals(l.getId(), l1.getParent())).collect(Collectors.toList());
 			getChild(l.getId(),collect);
+		});*/
+		System.out.println("===============2===============");
+		List<ListFilter> aa = new ArrayList<>();
+		top1.forEach(l -> {
+			getChild(l,aa);
 		});
+		aa.forEach(a -> System.out.println(a.getId()));
 	}
 	
 	public static void getChild(String id,List<ListFilter> chilids){
@@ -88,6 +97,19 @@ public class ListFilter {
 			}
 		});
 	}
+	
+	public static List<ListFilter> getChild(ListFilter listFilter, List<ListFilter> aa){
+		List<ListFilter> childs = list.stream().filter(l -> StringUtils.equals(listFilter.getId(), l.getParent())).collect(Collectors.toList());
+		aa.add(listFilter);
+		if (CollectionUtils.isEmpty(childs)) {
+			return aa;
+		}
+		childs.forEach(l ->{
+			getChild(l,aa);
+		});
+		return aa;
+	}
+	
 
 	public ListFilter(String id, String parent) {
 		super();

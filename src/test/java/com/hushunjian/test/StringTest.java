@@ -28,7 +28,9 @@ public class StringTest {
         System.out.println("PPPPPPPPPPPPPPPPPPPP");
         String a ="       ";
         System.out.println(a.isEmpty());
-        System.out.println();
+        System.out.println("AAAAAAAAAAAAAAAAAAAAA");
+        String outLineNum = "1.2.1.1.2";
+        System.out.println(outLineNum.substring(0,outLineNum.lastIndexOf(".")));
 	}
 	
 	public static String filter(String str) {
