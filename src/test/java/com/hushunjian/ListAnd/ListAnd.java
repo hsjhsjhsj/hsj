@@ -9,6 +9,7 @@ public class ListAnd {
 		l1.add("1");
 		l1.add("2");
 		l1.add("3");
+		System.out.println(l1);
 		List<String> l2 = new ArrayList<String>();
 		l2.add("2");
 		l2.add("3");

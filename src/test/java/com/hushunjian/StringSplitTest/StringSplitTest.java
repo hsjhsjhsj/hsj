@@ -4,9 +4,6 @@ import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -17,14 +14,11 @@ public class StringSplitTest {
 	public static void main(String[] args) {
 		String s1 = "";
 		System.out.println(s1.split("\\.")[0]);
-		
-		
 		String a = "aaaaaaaaaaaaa";
 		for(int i=0;i<3;i++){
 			a += i;
 			System.out.println(a);
 		}
-		
 		String b = "B12";
 		System.out.println("===================");
 		System.out.println(b.substring(1));
@@ -40,7 +34,6 @@ public class StringSplitTest {
 		for(String str : strs){
 			
 		}
-		
 		System.out.println("[==============================]");
 		String aa = "1.1.1.1.1.1.1.1";
 		String[] bb = aa.split("\\.");
@@ -58,8 +51,10 @@ public class StringSplitTest {
 		System.out.println("[||||||||||||||||||||||||||||||]");
 		System.out.println("[==============================]");
 		StringSplitTest stringSplitTest = new StringSplitTest();
-		List<String> parentPlanTaskOutLineNums = stringSplitTest.getParentPlanTaskOutLineNum(aa,new ArrayList<>());
+		String aadd = "1";
+		List<String> parentPlanTaskOutLineNums = stringSplitTest.getParentPlanTaskOutLineNum(aadd,new ArrayList<>());
 		for(String parentPlanTaskOutLineNum : parentPlanTaskOutLineNums){
+			System.out.println("++++");
 			System.out.println(parentPlanTaskOutLineNum);
 		}
 		System.out.println("[==============================]");
@@ -98,6 +93,46 @@ public class StringSplitTest {
 		System.out.println("[==============================]");
 		String as1 = "56.25.3.25.2";
 		System.out.println(as1.split("\\.")[0] + "." + as1.split("\\.")[1]);
+		String beamBlockColde = "BN25#1-2#B6";
+		String[] split2 = beamBlockColde.split("#");
+		for (int i = 0 ; i< split2.length; i++){
+			if(i == 0){
+				System.out.println(split2[i].substring(0, split2[i].length()-2));
+			}
+			System.out.println(split2[i]);
+		}
+		System.out.println("[==============================]");
+		System.out.println("[||||||||||||-4-|||||||||||||||]");
+		System.out.println("[==============================]");
+		String asd = "(未区分)";
+		String asd1 = "(未分区)";
+		boolean containsIgnoreCase = StringUtils.containsAny(asd1, "未区分","未分区","(未区分)","(未分区)");
+		if(containsIgnoreCase){
+			System.out.println("包含");
+		}else{
+			System.out.println("不包含");
+		}
+		System.out.println("[==============================]");
+		System.out.println("[||||||||||||-5-|||||||||||||||]");
+		System.out.println("[==============================]");
+		Long l1 = 15L;
+		System.out.println(String.format("%03d", l1));
+		System.out.println("[==============================]");
+		System.out.println("[||||||||||||-6-|||||||||||||||]");
+		System.out.println("[==============================]");
+		String bimCode = "50-04.10.00";
+		if (StringUtils.isNotEmpty(bimCode)){
+            String[] split1 = bimCode.split("\\.");
+            if (split1.length >= 2){
+                bimCode = String.format("%s.%s",split1[0],split1[1]);
+            }
+        }
+		System.out.println(bimCode);
+		System.out.println("[==============================]");
+		System.out.println("[||||||||||||-7-|||||||||||||||]");
+		System.out.println("[==============================]");
+		String lastIndexOf = "1.1.1.1.4";
+		System.out.println(lastIndexOf.lastIndexOf("."));
 	}
 	
 	public static Set<String> order(String string){

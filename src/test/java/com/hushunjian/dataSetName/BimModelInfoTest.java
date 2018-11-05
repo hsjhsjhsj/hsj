@@ -1,16 +1,23 @@
 package com.hushunjian.dataSetName;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class BimModelInfoTest {
 
 	private final static List<BimModelInfo> list = new ArrayList<>();
 
+	private final static List<BimModelInfo> list1 = new ArrayList<>();
+	
+	private final static List<BimModelInfo> list2 = new ArrayList<>();
+	
 	static {
 		list.add(new BimModelInfo("楼层1", "bim1", "bim1Name", "分区1"));
 		list.add(new BimModelInfo("楼层1", "bim2", "bim2Name", "分区1"));
@@ -23,8 +30,50 @@ public class BimModelInfoTest {
 		list.add(new BimModelInfo("楼层1", "bim4", "bim4Name", ""));
 		list.add(new BimModelInfo("", "bim4", "bim4Name", "分区2"));
 	}
+	static {
+		list1.add(new BimModelInfo("1.1.1.1", "bim1", "bim1Name", "分区1"));
+		list1.add(new BimModelInfo("1.1.1.1.1", "bim1", "bim1Name", "分区1"));
+		list1.add(new BimModelInfo("1.1.1.1.1.1", "bim1", "bim1Name", "分区1"));
+		list1.add(new BimModelInfo("1", "bim1", "bim1Name", "分区1"));
+		list1.add(new BimModelInfo("1.1", "bim1", "bim1Name", "分区1"));
+		list1.add(new BimModelInfo("1.1.1", "bim1", "bim1Name", "分区1"));
+	}
+	
+	static {
+		list2.add(new BimModelInfo("1.1.1.1", "bim1", "bim1Name", "分区1"));
+		list2.add(new BimModelInfo("1.1.1.2", "bim1", "bim1Name", "分区1"));
+		list2.add(new BimModelInfo("1.1.1.3", "bim1", "bim1Name", "分区1"));
+		list2.add(new BimModelInfo("1.1.1.4", "bim1", "bim1Name", "分区1"));
+		list2.add(new BimModelInfo("1.1.1.5", "bim1", "bim1Name", "分区1"));
+		list2.add(new BimModelInfo("1.1.1.6", "bim1", "bim1Name", "分区1"));
+	}
 
 	public static void main(String[] args) {
+		
+		List<BimModelInfo> lista = new ArrayList<>();
+		lista.add(new BimModelInfo("楼层1", "bim1", "bim1Name", "分区1"));
+		lista.add(new BimModelInfo("楼层2", "bim1", "bim1Name", "分区1"));
+		lista.add(new BimModelInfo("楼层3", "bim1", "bim1Name", "分区1"));
+		lista.add(new BimModelInfo("楼层1", "bim2", "bim2Name", "分区2"));
+		lista.add(new BimModelInfo("楼层2", "bim2", "bim2Name", "分区2"));
+		lista.add(new BimModelInfo("楼层3", "bim2", "bim2Name", "分区2"));
+		test2(lista);
+		for(BimModelInfo bimModelInfo : lista){
+			System.out.println(bimModelInfo.getDataSetName());
+		}
+		System.out.println("test2");
+		lista = test1(lista);
+		for(BimModelInfo bimModelInfo : lista){
+			System.out.println(bimModelInfo.getDataSetName());
+		}
+		System.out.println("test1");
+		
+		list2.sort(Comparator.comparing(BimModelInfo::getDataSetName).reversed());
+		System.out.println("===================0===================");
+		System.out.println(list2);
+		String[] split2 = list2.get(0).getDataSetName().split("\\.");
+		System.out.println(split2[split2.length-1]);
+		System.out.println("===================0===================");
 		String a = "1,2";
 		String[] split = a.split(",");
 		PlanTask planTask = new PlanTask();
@@ -170,5 +219,23 @@ public class BimModelInfoTest {
 			}
 		}
 		return map;
+	}
+	
+	public static List<BimModelInfo> test1(List<BimModelInfo> list){
+		list = list.stream().filter(bimModelInfo -> StringUtils.equals(bimModelInfo.getDataSetName(), "楼层1")).collect(Collectors.toList());
+		return list;
+	}
+	
+	public static void test2(List<BimModelInfo> list){
+		List<BimModelInfo> temp = list;
+		for(int i = 0;i<list.size();i++){
+			if(i == 1){
+				temp = temp.stream().filter(bimModelInfo -> StringUtils.equals(bimModelInfo.getDataSetName(), "楼层1")).collect(Collectors.toList());
+			}else if(i == 2){
+				temp = temp.stream().filter(bimModelInfo -> StringUtils.equals(bimModelInfo.getPartition(), "分区1")).collect(Collectors.toList());
+			}
+		}
+		list.clear();
+		list.addAll(temp);
 	}
 }

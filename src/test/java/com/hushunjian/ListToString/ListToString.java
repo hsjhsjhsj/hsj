@@ -2,7 +2,9 @@ package com.hushunjian.ListToString;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -16,6 +18,11 @@ public class ListToString {
 		System.out.println(strs.get(0));
 	}
 	public static void main(String[] args) {
+		String s = "1233";
+		List<String> ss = Arrays.asList(s);
+		
+		System.out.println(ss);
+		
 		List<String> strs = new ArrayList<String>();
 		strs.add("1");
 		strs.add("11");

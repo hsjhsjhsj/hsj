@@ -20,6 +20,12 @@ public class DateTest {
 	private Date time2;
 	
 	public static void main(String[] args) throws ParseException {
+		
+		System.out.println("==========1==========");
+		Date start = new Date();
+		System.out.println(start.getTime());
+		System.out.println("==========1==========");
+		
 		DateTest dateTest= new DateTest();
 		dateTest.setTime1(ZonedDateTime.now());
 		dateTest.setTime2(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-7-27 11:24:10"));

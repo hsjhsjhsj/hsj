@@ -8,5 +8,12 @@ public class MathTest {
 		Long b = 3L;
 		double f1 = new BigDecimal((float)a/b).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 		System.out.println(f1);
+		System.out.println("================");
+		BigDecimal bigDecimal;
+		try {
+			bigDecimal = new BigDecimal("");
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 	}
 }
