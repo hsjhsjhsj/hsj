@@ -37,11 +37,11 @@ public class GroupByTest {
 		System.out.println("====================1====================");
 		List<GroupByTest> groupByTests = Lists.newArrayList(
 				new GroupByTest("A",1),
+				new GroupByTest("D",6),
 				new GroupByTest("A",2),
 				new GroupByTest("B",3),
 				new GroupByTest("B",4),
 				new GroupByTest("C",5),
-				new GroupByTest("D",6),
 				new GroupByTest("A",7)
 				);
 		

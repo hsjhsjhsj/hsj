@@ -1,5 +1,7 @@
 package com.hushunjian.testEquest;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class TestEquals {
 	public static void main(String[] args) {
 		User user1 = new User();
@@ -16,9 +18,6 @@ public class TestEquals {
 		}else{
 			System.out.println("不同的对象");
 		}
+		System.out.println(StringUtils.equalsAny(user1.getUserName(), "李四","李四"));
 	}
-	
-	
-
-
 }
