@@ -1,6 +1,7 @@
 package com.hushunjian.dataSetName;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +38,15 @@ public class BimModelInfoTest {
 		list1.add(new BimModelInfo("1", "bim1", "bim1Name", "分区1"));
 		list1.add(new BimModelInfo("1.1", "bim1", "bim1Name", "分区1"));
 		list1.add(new BimModelInfo("1.1.1", "bim1", "bim1Name", "分区1"));
+		list1.add(new BimModelInfo("1.2", "bim1", "bim1Name", "分区1"));
+		list1.add(new BimModelInfo("1.2.1", "bim1", "bim1Name", "分区1"));
+		list1.add(new BimModelInfo("1.2.2", "bim1", "bim1Name", "分区1"));
+		list1.add(new BimModelInfo("1.2.1.1", "bim1", "bim1Name", "分区1"));
+		list1.add(new BimModelInfo("1.2.1.2", "bim1", "bim1Name", "分区1"));
+		list1.add(new BimModelInfo("1.2.2.1", "bim1", "bim1Name", "分区1"));
+		list1.add(new BimModelInfo("1.2.2.2", "bim1", "bim1Name", "分区1"));
+		list1.add(new BimModelInfo("1.2.2.1.1", "bim1", "bim1Name", "分区1"));
+		list1.add(new BimModelInfo("1.2.2.1.2", "bim1", "bim1Name", "分区1"));
 	}
 	
 	static {
@@ -49,7 +59,29 @@ public class BimModelInfoTest {
 	}
 
 	public static void main(String[] args) {
+		System.out.println("======================================");
+		list1.sort(Comparator.comparing(BimModelInfo::getDataSetName).reversed());
+		List<String> collect = list1.stream().map(BimModelInfo::getDataSetName).collect(Collectors.toList());
+		for(String a : collect){
+			System.out.println(a);
+		}
+		System.out.println("======================================");
+		Collections.sort(list1,new Comparator<BimModelInfo>() {
+			@Override
+			public int compare(BimModelInfo o1,BimModelInfo o2) {
+				if (o1.getBimCodeName().length() > o2.getBimCodeName().length()) {
+					return 1;
+				} else if (o1.getBimCodeName().length() == o2.getBimCodeName().length()) {
+					return 0;
+				} else {
+					return -1;
+				}
+
+			}
+		});
+		System.out.println("======================================");
 		
+		System.out.println("======================================");
 		List<BimModelInfo> lista = new ArrayList<>();
 		lista.add(new BimModelInfo("楼层1", "bim1", "bim1Name", "分区1"));
 		lista.add(new BimModelInfo("楼层2", "bim1", "bim1Name", "分区1"));

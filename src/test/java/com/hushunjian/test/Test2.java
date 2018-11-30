@@ -12,6 +12,7 @@ import java.util.Date;
 public class Test2 {
 	public static void main(String[] args) throws ParseException {
 		String a = "92.0";
+		System.out.println(BigDecimal.valueOf(Double.valueOf("69070.75")));
 		Integer round = (int)Math.round(Double.valueOf(a));
 		System.out.println(round);
 		System.out.println("YG30Z-074".substring(0,2)+"==========6666");

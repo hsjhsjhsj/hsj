@@ -20,6 +20,7 @@ public class DateTest {
 	private Date time2;
 	
 	public static void main(String[] args) throws ParseException {
+		System.out.println(ZonedDateTime.now());
 		
 		System.out.println("==========1==========");
 		Date start = new Date();
@@ -57,6 +58,10 @@ public class DateTest {
 		dateTest.test();
 		dateTest.test1();
 		dateTest.test2();
+		
+		System.out.println("=====================");
+		dateTest.test3();
+		System.out.println("=====================");
 	}
 	
 	
@@ -82,4 +87,8 @@ public class DateTest {
 		System.out.println(calendar.getWeekYear());
 	}
 	
+	private void test3(){
+		ZonedDateTime time = ZonedDateTime.now();
+		System.out.println(time.getDayOfYear());
+	}
 }
