@@ -133,6 +133,20 @@ public class StringSplitTest {
 		System.out.println("[==============================]");
 		String lastIndexOf = "1.1.1.1.4";
 		System.out.println(lastIndexOf.lastIndexOf("."));
+		System.out.println("[==============================]");
+		System.out.println("[||||||||||||-8-|||||||||||||||]");
+		System.out.println("[==============================]");
+		String foreignKey = "a_b_c_id";
+		String substring = foreignKey.substring(0, foreignKey.indexOf("_"));
+		System.out.println("substring:"+substring);
+		System.out.println("[==============================]");
+		System.out.println("[||||||||||||-10-|||||||||||||||]");
+		System.out.println("[==============================]");
+		String foreignKey1 = "c_id";
+		if (foreignKey1.contains("_")) {
+			String substring2 = foreignKey1.substring(foreignKey1.indexOf("_")+1,foreignKey1.length());
+			System.out.println("substring2:"+substring2);
+		}
 	}
 	
 	public static Set<String> order(String string){
