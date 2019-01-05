@@ -23,6 +23,15 @@ public class ArrayTest {
 //		test3(list1);
 		//list1 = list1.stream().filter(s -> s.equals("2")).collect(Collectors.toList());
 		System.out.println(list1);
+		System.out.println("==========1==========");
+		List<String> source = new ArrayList<>();
+		source.add("1");
+		source.add("2");
+		source.forEach(str -> System.out.println(str));
+		Object obj = source;
+		List<Object> target = (List<Object>) obj;
+		target.forEach(object -> System.out.println(object));
+		
 	}
 	
 	public static void test1(String[] array1){

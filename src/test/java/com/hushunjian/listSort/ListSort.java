@@ -54,6 +54,18 @@ public class ListSort {
 		//setListOrder1(partitions,partitionOrder);
 		List<String> orderByTarget = orderByTarget(partitions,partitionOrder);
 		System.out.println(orderByTarget);
+		System.out.println("=======================");
+		System.out.println("|||||||||||2|||||||||||");
+		System.out.println("=======================");
+		List<ListDTO> list1 = new ArrayList<>();
+		list1.add(new ListDTO("001"));
+		list1.add(new ListDTO("002"));
+		list1.add(new ListDTO("011"));
+		list1.add(new ListDTO("021"));
+		list1.add(new ListDTO("101"));
+		list1.add(new ListDTO("003"));
+		list1.sort(Comparator.comparing(ListDTO::getBeamSpanNum));
+		System.out.println(list1);
 	}
 	
 	public static void setListOrde(List<String> orderRegulation, List<User> targetList) {
