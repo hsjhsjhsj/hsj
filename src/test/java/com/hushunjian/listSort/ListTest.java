@@ -41,7 +41,6 @@ public class ListTest {
 	
 	private static List<String> parent(List<String> source){
 		Collections.sort(source);
-		List<String> target = new ArrayList<>();
 		if (source != null && source.size() > 1) {
 			String a = source.get(0) + ".";
 			Iterator<String> iterator = source.iterator();
@@ -50,11 +49,10 @@ public class ListTest {
 				if(next.startsWith(a)){
 					iterator.remove();
 				}else{
-					target.add(next);
 					a = next + ".";
 				}
 			}
-			return target;
+			return source;
 		}
 		return source;
 	}
