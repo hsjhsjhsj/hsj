@@ -292,6 +292,23 @@ http://www.importnew.com/24514.html
 
 mapstruct ieda 
 https://stackoverflow.com/questions/38947569/mapstruct-and-gradle-configuratoin-issue-in-intellij-idea
+File | Settings | Build, Execution, Deployment | Build Tools | Gradle | Runner
+Enable Delegate IDE build/run 
+buildscript {
+    ...    
+}
+plugins {
+    id 'net.ltgt.apt' version '0.9'
+}
+apply plugin: 'idea'
+apply plugin: "net.ltgt.apt"
+dependencies {
+    ...
+    compile 'org.mapstruct:mapstruct-jdk8:1.1.0.Final'
+    apt 'org.mapstruct:mapstruct-processor:1.1.0.Final'
+}
+
+
 
 mapstruct eclipse 
 https://stackoverflow.com/questions/45518161/how-to-get-eclipse-to-generate-mapstruct-mappers-using-gradle

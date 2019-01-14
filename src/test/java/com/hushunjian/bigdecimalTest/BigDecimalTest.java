@@ -20,5 +20,12 @@ public class BigDecimalTest {
 		}else{
 			
 		}
+		
+		
+		BigDecimal a1 = BigDecimal.TEN;
+		Integer a2 = 10;
+		if (a1.intValue() == a2) {
+			System.out.println("a1,a2相等");
+		}
 	}
 }
