@@ -132,8 +132,8 @@ public class BimModelInfoTest {
 		{    
 		    System.out.println(entry.getKey()+": "+entry.getValue());    
 		} 
-
-	}
+		System.out.println("===================3===================");
+	} 
 
 	public static Map<PlanTask,List<BimModelInfo>> groupBy1(String a, List<BimModelInfo> list,PlanTask parent) {
 		Map<PlanTask,List<BimModelInfo>> result = new HashMap<>();

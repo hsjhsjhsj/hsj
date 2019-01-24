@@ -21,9 +21,13 @@ public class ListTest {
 		list.add("1.1.1");
 		list.add("1.1");
 		list.add("1.3");
+		list.add("1.100.1");
 		list.add("1.4.2");
 		list.add("1.3.1");
 		list.add("1.10");
+		list.add("1.23.1.22.2");
+		list.add("1.23.1.22.1");
+		list.add("1.23.1.22");
 		/*
 		 * list.add("1"); list.add("1.1"); list.add("1.2");
 		 */
@@ -31,7 +35,7 @@ public class ListTest {
 		/*
 		 * list.add("1.2"); list.add("1.1");
 		 */
-
+		Collections.sort(list);
 		list.forEach(s -> System.out.println(s));
 		List<String> parent = parent(list);
 		System.out.println("==========1==========");
@@ -45,6 +49,16 @@ public class ListTest {
 		list2.add("1.4.3");
 		Collections.sort(list2, new OutLineNumComparator());
 		list2.forEach(par -> System.out.println(par));
+		System.out.println("==========4==========");
+		List<ListOutLineNum> outLineNumList = new ArrayList<>();
+		outLineNumList.add(new ListOutLineNum("1.1", "任务1"));
+		outLineNumList.add(new ListOutLineNum("1.2.1", "任务1"));
+		outLineNumList.add(new ListOutLineNum("1.3", "任务3"));
+		outLineNumList.add(new ListOutLineNum("1.1.1", "任务1"));
+		outLineNumList.add(new ListOutLineNum("1.2", "任务2"));
+		outLineNumList.add(new ListOutLineNum("1.3.1", "任务1"));
+		outLineNumList.sort(new OutLineNumComparator2());
+		outLineNumList.forEach(a -> System.out.println(a.getOutLineNum()));
 	}
 
 	private static List<String> parent(List<String> source) {

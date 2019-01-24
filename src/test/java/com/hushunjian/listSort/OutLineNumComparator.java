@@ -32,6 +32,7 @@ public class OutLineNumComparator implements Comparator<String> {
 				compareTo = 1;
 				break;
 			} else {
+				// 相等时判断是否为1.4.2  1.4.2.1  
 				if (i == minLength - 1) {
 					if (arry1.length > arry2.length) {
 						compareTo = 1;

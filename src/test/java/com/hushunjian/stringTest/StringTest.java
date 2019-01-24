@@ -25,5 +25,12 @@ public class StringTest {
 		list.add("B6");
 		String d = list.toString();
 		System.out.println(d.substring(1,d.length()-1));
+		String f = "1-2-41下";
+		System.out.println(f.substring(0,f.length()-1));
+		String e = "1,2";
+		String[] split = e.split(",");
+		for (String s : split) {
+			System.out.println(s);
+		}
 	}
 }
