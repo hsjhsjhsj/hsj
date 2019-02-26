@@ -2,6 +2,9 @@ package com.hushunjian.DateTest;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -62,6 +65,9 @@ public class DateTest {
 		System.out.println("=====================");
 		dateTest.test3();
 		System.out.println("=====================");
+		System.out.println("==========1==========");
+		System.out.println(ZonedDateTime.of(LocalDate.now(), LocalTime.of(0, 0, 0), ZoneId.systemDefault()));
+		System.out.println("==========1==========");
 	}
 	
 	

@@ -32,5 +32,8 @@ public class StringTest {
 		for (String s : split) {
 			System.out.println(s);
 		}
+		System.out.println("==========");
+		String g = " D1 ";
+		System.out.println("'"+g.trim()+"'");
 	}
 }

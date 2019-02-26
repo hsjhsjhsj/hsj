@@ -4,6 +4,9 @@ package com.hushunjian.date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
@@ -19,8 +22,17 @@ public class DateUtilTest {
 		ZonedDateTime now = ZonedDateTime.now();
 		Instant aa = now.toInstant();
 		System.out.println(aa);
+		System.out.println("----------1----------");
+		System.out.println(DateUtil.genCurrDate());
+		System.out.println(DateUtil.genCurrDateTime()+"-----");
+		System.out.println(ZonedDateTime.of(LocalDate.now(), LocalTime.of(0, 0, 0), ZoneId.systemDefault()));
+		System.out.println(ZonedDateTime.of(LocalDate.now(), LocalTime.of(LocalTime.now().getHour(), LocalTime.now().getMinute(), 0), ZoneId.systemDefault()));
+		System.out.println("----------1----------");
+		System.out.println("----------2----------");
+		System.out.println(DateUtil.dateToZonedDateTime(new Date()));
+		System.out.println("----------2----------");
 	}
-	
+
 	private static void getWeekInCurrentMonth(Date currentDate){
 		// 设置时间
 		Calendar calendar = Calendar.getInstance();

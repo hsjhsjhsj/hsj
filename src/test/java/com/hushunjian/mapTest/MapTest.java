@@ -61,5 +61,9 @@ public class MapTest {
 				System.out.println(value.getId());
 			});
 		});
+		System.out.println("==========2==========");
+		Map<String,String> map2 = new HashMap<>();
+		System.out.println(map2.get(null));
+		System.out.println("==========2==========");
 	}
 }

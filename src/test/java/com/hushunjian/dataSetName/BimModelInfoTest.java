@@ -270,4 +270,21 @@ public class BimModelInfoTest {
 		list.clear();
 		list.addAll(temp);
 	}
+	
+	public static Map<String, List<BimModelInfo>> gruop(Integer element, List<BimModelInfo> list){
+		Map<String, List<BimModelInfo>> collect = new HashMap<>();
+		switch (element) {
+		case 1:// 按照楼层分组
+			collect = list.stream().collect(Collectors.groupingBy(BimModelInfo::getDataSetName));
+			break;
+		case 2:// 按照分区分组
+			collect = list.stream().collect(Collectors.groupingBy(BimModelInfo::getPartition));
+			break;
+		default:
+			break;
+		}
+		return collect;
+	}
+
+	
 }
