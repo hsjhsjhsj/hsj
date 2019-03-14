@@ -35,5 +35,9 @@ public class StringTest {
 		System.out.println("==========");
 		String g = " D1 ";
 		System.out.println("'"+g.trim()+"'");
+		System.out.println("==========1==========");
+		StringBuilder message = new StringBuilder("该目录下已存在相同文件[");
+		message.replace(message.length()-1, message.length(), ".");
+		System.out.println(message);
 	}
 }

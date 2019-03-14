@@ -31,7 +31,13 @@ public class ArrayTest {
 		Object obj = source;
 		List<Object> target = (List<Object>) obj;
 		target.forEach(object -> System.out.println(object));
-		
+		System.out.println("==========2==========");
+		List<String> list = Arrays.asList("机电施工一标段", "机电施工二标段",
+	            "机电施工三标段", "机电施工四标段", "机电施工五标段", "机电施工六标段", "机电施工七标段", "机电施工八标段",
+	            "机电施工九标段");
+		System.out.println(list.contains("aa"));
+		System.out.println(list.contains("机电施工一标段"));
+		System.out.println(list.indexOf("机电施工一标段") >= 0);
 	}
 	
 	public static void test1(String[] array1){
