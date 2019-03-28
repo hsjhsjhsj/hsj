@@ -1,0 +1,69 @@
+添加工序存储过程
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addProcess`()
+BEGIN
+	DECLARE beamBlock VARCHAR(255) CHARACTER SET utf8;
+	DECLARE beamBlockId VARCHAR(255) CHARACTER SET utf8;
+	DECLARE pedestal VARCHAR(255) CHARACTER SET utf8;
+	DECLARE pedestalId VARCHAR(255) CHARACTER SET utf8;
+	DECLARE leaderId VARCHAR(255) CHARACTER SET utf8;
+	DECLARE createdTimeOne datetime;
+	DECLARE processDate datetime;
+	DECLARE createdTimeTwo datetime;
+	DECLARE finished BOOLEAN DEFAULT FALSE;
+	DECLARE cursor1 CURSOR FOR
+	SELECT 
+		t1.beam_block AS beamBlock,
+		t1.beam_block_id AS beamBlockId,
+		t1.pedestal AS pedestal,
+		t1.pedestal_id AS pedestalId,
+		t1.createdTime AS createTimeOne,
+		t1.process_date AS processDate,
+		t1.leader_id AS leaderId,
+		t2.createdTime AS createdTimeTwo
+		FROM 
+		pf_beam_block_process_record_t t1, 
+		pf_beam_block_process_record_t t2 
+		WHERE 
+		t1.beam_block = t2.beam_block 
+		AND t1.process = 'CONCRETE_POURING_END' 
+		AND t2.process = 'FIRST_LIFTING';
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET finished = TRUE;	
+	OPEN cursor1;
+	loop_1:Loop
+		FETCH cursor1 INTO beamBlock,beamBlockId,pedestal,pedestalId,createdTimeOne,processDate,leaderId,createdTimeTwo;
+		IF finished THEN
+			LEAVE loop_1;
+		END IF;
+		INSERT INTO pf_beam_block_process_record_t(ID,VERSION,createdTime,beam_block,beam_block_id,leader_id,pedestal,pedestal_id,process,process_date) VALUE((select substring(MD5(RAND()),1,32)), 0, NOW(), beamBlock, beamBlockId, leaderId, pedestal, pedestalId, 'MOLD_REMOVAL', DATE_ADD(processDate, INTERVAL 1 MINUTE_SECOND));
+	END LOOP loop_1;
+	CLOSE cursor1;
+	UPDATE pf_beam_block_process_record_t SET createdTime = NOW();
+END
+
+修改时间存储过程
+CREATE DEFINER=`root`@`%` PROCEDURE `updateCreatedTime`()
+BEGIN  
+    DECLARE ID1 VARCHAR(100) CHARACTER SET utf8; 
+    DECLARE CODE1 VARCHAR(100) CHARACTER SET utf8;
+    DECLARE ISFINISHED BOOLEAN DEFAULT FALSE;  
+    DECLARE TEST_CURSOR CURSOR FOR 
+  select b.id,
+if(b.process='REINFORCEMENT_CAGE_ACCEPTANCE',1,
+if(b.process='TEMPLATE_ACCEPTANCE',2,
+if(b.process='CONCRETE_POURING_START',3,
+if(b.process='CONCRETE_POURING_END',4,
+if(b.process='MOLD_REMOVAL',5,
+if(b.process='FIRST_LIFTING',6,7)))))) as num from PF_BEAM_BLOCK_PROCESS_RECORD_T b ORDER BY beam_block,num ;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET ISFINISHED=TRUE;
+    OPEN TEST_CURSOR;  	
+    TEST_LOOP:LOOP  
+        FETCH TEST_CURSOR INTO ID1,CODE1;  
+         IF ISFINISHED THEN  
+            LEAVE TEST_LOOP;  
+         END IF;
+         UPDATE PF_BEAM_BLOCK_PROCESS_RECORD_T  SET createdTime = DATE_ADD(createdTime,INTERVAL CODE1 MINUTE_SECOND) where id = ID1;
+    END LOOP TEST_LOOP;  
+    CLOSE TEST_CURSOR;
+ END
+
+

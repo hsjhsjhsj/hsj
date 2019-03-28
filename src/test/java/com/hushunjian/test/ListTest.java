@@ -46,5 +46,14 @@ public class ListTest {
 				System.out.println(values.get(i));
 			}
 		}
+		
+		System.out.println("==========1==========");
+		List<String> list = new ArrayList<>();
+		list.add("1");
+		list.add("2");
+		list.add("3");
+		list.add("4");
+		list.add("5");
+		System.out.println("size:" + list.size() + ";index:" + list.indexOf("1"));
 	}
 }

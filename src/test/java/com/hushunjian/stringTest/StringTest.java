@@ -39,5 +39,14 @@ public class StringTest {
 		StringBuilder message = new StringBuilder("该目录下已存在相同文件[");
 		message.replace(message.length()-1, message.length(), ".");
 		System.out.println(message);
+		System.out.println("==========2==========");
+		
+		String parentProjectName = "青岛地铁一号线";
+		System.out.println(StringUtils.contains(parentProjectName, "青岛") && StringUtils.contains(parentProjectName, "一号"));
+		System.out.println("==========3==========");
+		String beamBlock = "YY30Z-020-D12";
+		String[] split2 = beamBlock.split("-");
+		String a1 = split2[2];
+		System.out.println(a1.substring(1, a1.length()));
 	}
 }
