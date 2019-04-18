@@ -44,9 +44,15 @@ public class StringTest {
 		String parentProjectName = "青岛地铁一号线";
 		System.out.println(StringUtils.contains(parentProjectName, "青岛") && StringUtils.contains(parentProjectName, "一号"));
 		System.out.println("==========3==========");
-		String beamBlock = "YY30Z-020-D12";
+		String beamBlock = "YY30Z-020-D3";
 		String[] split2 = beamBlock.split("-");
 		String a1 = split2[2];
 		System.out.println(a1.substring(1, a1.length()));
+		System.out.println("==========4==========");
+		System.out.println(StringUtils.containsAny(beamBlock, "D10", "D12"));
+		System.out.println("==========5==========");
+		String a2 = " S  dd ";
+		System.out.println(StringUtils.isNotBlank(a2));
+		
 	}
 }

@@ -2,6 +2,7 @@ package com.hushunjian.DateTest;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -68,6 +69,20 @@ public class DateTest {
 		System.out.println("==========1==========");
 		System.out.println(ZonedDateTime.of(LocalDate.now(), LocalTime.of(0, 0, 0), ZoneId.systemDefault()));
 		System.out.println("==========1==========");
+		System.out.println("==========2==========");
+		String date1String = "2018-8-11 9:20:51";
+		Date date1Date = DateUtils.parseDate(date1String, "yyyy-MM-dd HH:mm:ss");
+		String date2String = "2018-8-11 9:21:51";
+		Date date2Date = DateUtils.parseDate(date2String, "yyyy-MM-dd HH:mm:ss");
+		ZonedDateTime date1 = ZonedDateTime.ofInstant(date1Date.toInstant(), ZoneId.systemDefault());
+		ZonedDateTime date2 = ZonedDateTime.ofInstant(date2Date.toInstant(), ZoneId.systemDefault());
+		Duration between = Duration.between(date1, date2);
+		System.out.println("seconds:" + Math.abs(between.getSeconds()));
+		System.out.println("==========2==========");
+		System.out.println("==========3==========");
+		long days = Duration.between(ZonedDateTime.of(ZonedDateTime.now().toLocalDate(), LocalTime.of(0, 0, 0), ZoneId.systemDefault()), ZonedDateTime.of(ZonedDateTime.now().toLocalDate(), LocalTime.of(0, 0, 0), ZoneId.systemDefault())).toDays();
+		System.out.println(days);
+		System.out.println("==========3==========");
 	}
 	
 	

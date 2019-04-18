@@ -66,4 +66,46 @@ if(b.process='FIRST_LIFTING',6,7)))))) as num from PF_BEAM_BLOCK_PROCESS_RECORD_
     CLOSE TEST_CURSOR;
  END
 
+判断时间是否重叠
+SELECT * FROM pf_weekly_report_t WHERE NOT ((endDate < '2019-03-29') OR (startDate > '2019-04-01'))
+
+
+SELECT * FROM pf_weekly_report_t WHERE (startDate >= '2019-03-10' AND startDate <= '2019-03-11') OR (endDate >= '2019-03-10' AND endDate <= '2019-03-11') OR (startDate <= '2019-03-10' AND endDate >= '2019-03-11')
+
+SELECT * FROM pf_weekly_report_t WHERE (startDate >= '2019-03-10' AND startDate <= '2019-03-15') OR (endDate >= '2019-03-10' AND endDate <= '2019-03-15') OR (startDate <= '2019-03-10' AND endDate >= '2019-03-15')
+
+SELECT * FROM pf_weekly_report_t WHERE (startDate >= '2019-03-10' AND startDate <= '2019-03-19') OR (endDate >= '2019-03-10' AND endDate <= '2019-03-19') OR (startDate <= '2019-03-10' AND endDate >= '2019-03-19')
+
+SELECT * FROM pf_weekly_report_t WHERE (startDate >= '2019-03-10' AND startDate <= '2019-03-25') OR (endDate >= '2019-03-10' AND endDate <= '2019-03-25') OR (startDate <= '2019-03-10' AND endDate >= '2019-03-25')
+
+SELECT * FROM pf_weekly_report_t WHERE (startDate >= '2019-03-10' AND startDate <= '2019-03-30') OR (endDate >= '2019-03-10' AND endDate <= '2019-03-30') OR (startDate <= '2019-03-10' AND endDate >= '2019-03-30')
+
+
+
+
+SELECT * FROM pf_weekly_report_t WHERE (startDate >= '2019-03-13' AND startDate <= '2019-03-15') OR (endDate >= '2019-03-13' AND endDate <= '2019-03-15') OR (startDate <= '2019-03-13' AND endDate >= '2019-03-15')
+
+SELECT * FROM pf_weekly_report_t WHERE (startDate >= '2019-03-13' AND startDate <= '2019-03-18') OR (endDate >= '2019-03-13' AND endDate <= '2019-03-18') OR (startDate <= '2019-03-13' AND endDate >= '2019-03-18')
+
+SELECT * FROM pf_weekly_report_t WHERE (startDate >= '2019-03-13' AND startDate <= '2019-03-25') OR (endDate >= '2019-03-13' AND endDate <= '2019-03-25') OR (startDate <= '2019-03-13' AND endDate >= '2019-03-25')
+
+SELECT * FROM pf_weekly_report_t WHERE (startDate >= '2019-03-13' AND startDate <= '2019-03-30') OR (endDate >= '2019-03-13' AND endDate <= '2019-03-30') OR (startDate <= '2019-03-13' AND endDate >= '2019-03-30')
+
+
+
+SELECT * FROM pf_weekly_report_t WHERE (startDate >= '2019-03-18' AND startDate <= '2019-03-19') OR (endDate >= '2019-03-18' AND endDate <= '2019-03-19') OR (startDate <= '2019-03-18' AND endDate >= '2019-03-19')
+
+SELECT * FROM pf_weekly_report_t WHERE (startDate >= '2019-03-18' AND startDate <= '2019-03-25') OR (endDate >= '2019-03-18' AND endDate <= '2019-03-25') OR (startDate <= '2019-03-18' AND endDate >= '2019-03-25')
+
+SELECT * FROM pf_weekly_report_t WHERE (startDate >= '2019-03-18' AND startDate <= '2019-03-30') OR (endDate >= '2019-03-18' AND endDate <= '2019-03-30') OR (startDate <= '2019-03-18' AND endDate >= '2019-03-30')
+
+
+
+SELECT * FROM pf_weekly_report_t WHERE (startDate >= '2019-03-21' AND startDate <= '2019-03-25') OR (endDate >= '2019-03-21' AND endDate <= '2019-03-25') OR (startDate <= '2019-03-21' AND endDate >= '2019-03-25')
+
+SELECT * FROM pf_weekly_report_t WHERE (startDate >= '2019-03-21' AND startDate <= '2019-03-30') OR (endDate >= '2019-03-21' AND endDate <= '2019-03-30') OR (startDate <= '2019-03-21' AND endDate >= '2019-03-30')
+
+
+
+SELECT * FROM pf_weekly_report_t WHERE (startDate >= '2019-03-29' AND startDate <= '2019-04-01') OR (endDate >= '2019-03-29' AND endDate <= '2019-04-01') OR (startDate <= '2019-03-29' AND endDate >= '2019-04-01')
 

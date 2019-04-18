@@ -1,6 +1,7 @@
 package com.hushunjian.comparatorTest;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -18,10 +19,20 @@ public class BeamBlockTest {
 		beamBlocks.add("YY30Z-007-D1");
 		beamBlocks.sort(new BeamBlockComparator().reversed());
 		beamBlocks.forEach(beamBlock -> System.out.println(beamBlock));
+		Iterator<String> iterator = beamBlocks.iterator();
+		while(iterator.hasNext()){
+			String next = iterator.next();
+			if(StringUtils.equals(next, "Y30Z-005-D1")){
+				return;
+			}
+			System.out.println("迭代器" + next);
+		}
 		
 		StringUtils.equalsAny("NO", "No1","");
 		System.out.println(StringUtils.isNoneBlank("","a"));
 		
 		System.out.println(StringUtils.containsAny("4-2-48上 ", "上"));
+
+		
 	}
 }
