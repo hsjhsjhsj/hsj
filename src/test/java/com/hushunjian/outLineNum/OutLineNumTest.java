@@ -21,5 +21,9 @@ public class OutLineNumTest {
 			parent.add(s);
 		}
 		System.out.println(parent);
+		
+		System.out.println("------------------");
+		String path = "1.2";
+		System.out.println(path.substring(0, path.lastIndexOf(".")));
 	}
 }
