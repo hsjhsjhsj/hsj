@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.Maps;
+
 public class MapTest {
 	public static void main(String[] args) {
 		Map<String,String> map = new HashMap<>();
@@ -65,5 +67,18 @@ public class MapTest {
 		Map<String,String> map2 = new HashMap<>();
 		System.out.println(map2.get(null));
 		System.out.println("==========2==========");
+		System.out.println("==========3==========");
+		Map<String, Integer> mapa = Maps.newHashMap();
+		mapa.get("1");
+		System.out.println("==========3==========");
+		System.out.println("==========4==========");
+		List<String> lista = new ArrayList<>();
+		lista.add("a");
+		lista.add("b");
+		lista.add("c");
+		lista.add("d");
+		lista.add("e");
+		lista.forEach(str -> System.out.println(lista.indexOf(str)));
+		System.out.println("==========4==========");
 	}
 }

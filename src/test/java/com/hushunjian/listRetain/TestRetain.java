@@ -1,7 +1,9 @@
 package com.hushunjian.listRetain;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class TestRetain {
 	public static void main(String[] args) {
@@ -14,10 +16,15 @@ public class TestRetain {
 		l2.add("3");
 		// 保留相同数据
 		//l1.retainAll(l2);
+		Set<String> set = new HashSet<>();
+		set.add("1");
+		set.add("3");
+		l1.retainAll(set);
+		System.out.println(l1);
 		// 去除相同数据
 		// l1.removeAll(l2);
 		// 添加数据
-		l1.addAll(l2);
+/*		l1.addAll(l2);
 		System.out.println(l1.toString());
 		List<String> l3 = l1.subList(0, 1);
 		System.out.println(l3.toString());
@@ -25,6 +32,6 @@ public class TestRetain {
 		l4.add("1");
 		List<String> l5 = l4.subList(0, 1);
 		System.out.println("===========");
-		System.out.println(l5.toString());
+		System.out.println(l5.toString());*/
 	}
 }

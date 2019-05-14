@@ -424,3 +424,6 @@ mappedBy表示声明自己不是一对多的关系维护端，由对方来维护
 Xshell注册机
 http://www.xue51.com/soft/10059.html
 
+阿里云镜像站点
+http://mirrors.aliyun.com/centos/
+
