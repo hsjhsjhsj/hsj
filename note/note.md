@@ -427,3 +427,6 @@ http://www.xue51.com/soft/10059.html
 阿里云镜像站点
 http://mirrors.aliyun.com/centos/
 
+设计模式相关
+https://github.com/guanguans/notes/blob/master/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%EF%BC%8845%E7%A7%8D%EF%BC%89.md
+
