@@ -1,9 +1,6 @@
 package com.hushunjian.test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ListTest {
 	
@@ -55,5 +52,13 @@ public class ListTest {
 		list.add("4");
 		list.add("5");
 		System.out.println("size:" + list.size() + ";index:" + list.indexOf("1"));
+
+		System.out.println("==========2==========");
+		List<List<String>> list1 = new LinkedList<>();
+		List<String> list2 = new ArrayList<>();
+		list2.add("before add child list");
+		list1.add(list2);
+		list2.add("after add child list");
+		System.out.println(list1);
 	}
 }

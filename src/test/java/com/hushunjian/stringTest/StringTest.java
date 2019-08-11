@@ -53,6 +53,10 @@ public class StringTest {
 		System.out.println("==========5==========");
 		String a2 = " S  dd ";
 		System.out.println(StringUtils.isNotBlank(a2));
-		
+		System.out.println("==========6==========");
+		String path1 = "1.1";
+		String path2 = "1.2.1";
+		System.out.println(path1.compareTo(path2));
+
 	}
 }

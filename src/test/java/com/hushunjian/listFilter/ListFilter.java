@@ -1,9 +1,7 @@
 package com.hushunjian.listFilter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.ZonedDateTime;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -36,6 +34,7 @@ public class ListFilter {
 		list.add(new ListFilter("A241", "A24"));
 		list.add(new ListFilter("A231", "A23"));
 		list.add(new ListFilter("A232", "A23"));
+
 		
 /*		list.add(new ListFilter("B",null));
 		list.add(new ListFilter("B1", "B"));
@@ -54,6 +53,10 @@ public class ListFilter {
 	
 	
 	public static void main(String[] args) {
+
+
+
+
 		List<ListFilter> top1 = list.stream().filter(l -> StringUtils.isBlank(l.getParent())).collect(Collectors.toList());
 /*		top1.forEach(l -> {
 			System.out.println("父级" + l.getId());
