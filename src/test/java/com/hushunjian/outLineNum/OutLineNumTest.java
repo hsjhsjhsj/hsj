@@ -1,9 +1,6 @@
 package com.hushunjian.outLineNum;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class OutLineNumTest {
 	public static void main(String[] args) {
@@ -32,5 +29,22 @@ public class OutLineNumTest {
 		for(String aa : split2){
 			System.out.println(aa);
 		}
+		System.out.println("------------------");
+
+		List<OutLineNumDTO> outLineNumDTOs = new ArrayList<>();
+		outLineNumDTOs.add(new OutLineNumDTO("1", 1, 1));
+		outLineNumDTOs.add(new OutLineNumDTO("1.1", 2, 1));
+		outLineNumDTOs.add(new OutLineNumDTO("1.1.2", 3, 2));
+		outLineNumDTOs.add(new OutLineNumDTO("1.1.1.1", 4, 1));
+		outLineNumDTOs.add(new OutLineNumDTO("1.1.1.2", 4, 2));
+		outLineNumDTOs.add(new OutLineNumDTO("1.1.1.1.1", 5, 1));
+		outLineNumDTOs.add(new OutLineNumDTO("1.2", 2, 2));
+		outLineNumDTOs.add(new OutLineNumDTO("1.3", 2, 3));
+		outLineNumDTOs.add(new OutLineNumDTO("1.1.1", 3, 1));
+
+		outLineNumDTOs.sort(Comparator.comparing(OutLineNumDTO::getParentOutLineNum).thenComparing(OutLineNumDTO::getOrderNum));
+		outLineNumDTOs.forEach(outLineNumDTO -> {
+			System.out.println(outLineNumDTO.getOutLineNum());
+		});
 	}
 }

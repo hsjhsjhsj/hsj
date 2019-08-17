@@ -80,5 +80,8 @@ public class StringTest {
 		String name = "测试线路|郑许市域铁路工程长葛制梁场|001+测试|青岛站+测试|自建文件夹1+a";
 		name = target + name.substring(source.length(), name.length());
 		System.out.println(name);
+		String path1 = "1.1";
+		String path2 = "1.2.1";
+		System.out.println(path1.compareTo(path2));
 	}
 }
