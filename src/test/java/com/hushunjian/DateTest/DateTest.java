@@ -83,6 +83,15 @@ public class DateTest {
 		long days = Duration.between(ZonedDateTime.of(ZonedDateTime.now().toLocalDate(), LocalTime.of(0, 0, 0), ZoneId.systemDefault()), ZonedDateTime.of(ZonedDateTime.now().toLocalDate(), LocalTime.of(0, 0, 0), ZoneId.systemDefault())).toDays();
 		System.out.println(days);
 		System.out.println("==========3==========");
+		System.out.println("==========4==========");
+		String endTime = "20180811092151";
+		SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("yyyyMMddHHmm");
+		Date parse2 = simpleDateFormat2.parse(endTime);
+		System.out.println(parse2);
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+		Date parse = simpleDateFormat.parse(endTime);
+		System.out.println(parse);
+		System.out.println("==========4==========");
 	}
 	
 	

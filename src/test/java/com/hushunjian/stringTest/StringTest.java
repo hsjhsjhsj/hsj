@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
+import net.sf.json.JSONObject;
+
 public class StringTest {
 	public static void main(String[] args) {
 		String a = null;
@@ -53,6 +55,30 @@ public class StringTest {
 		System.out.println("==========5==========");
 		String a2 = " S  dd ";
 		System.out.println(StringUtils.isNotBlank(a2));
+		System.out.println("==========6==========");
+/*		JSONObject json = JSONObject.fromObject("{id:a}");
+		String string = json.getString("id");
+		System.out.println(string);*/
+		System.out.println("==========7==========");
+		String send = "流亭机场站-结构主体施工-主体结构-站台层-混凝土中板梁";
+		System.out.println(send.indexOf("-"));
+		String send1 = send.substring(0, send.indexOf("-"));
+		System.out.println(send1);
+		String send2 = send.substring(send.indexOf("-"), send.length());
+		System.out.println(send2);
+		System.out.println("==========8==========");
 		
+		String str1 = "线路1|单位工程1|参建方1+2";
+		String str2 = "线路1|单位工程2|参建方2+2";
+		String str3 = "线路1|单位工程1|参建方1+2";
+		String str4 = str3.replaceFirst(str1.replace("|", "\\|"), str2);
+		System.out.println(str4);
+		System.out.println("==========9==========");
+		String source = "测试线路|郑许市域铁路工程长葛制梁场|001+测试|青岛站+测试|自建文件夹1+a";
+		String regex = source.replace("|", "\\|");
+		String target = "测试线路|郑许市域铁路工程长葛制梁场|001+测试|青岛站+测试|自建文件夹1+a+b";
+		String name = "测试线路|郑许市域铁路工程长葛制梁场|001+测试|青岛站+测试|自建文件夹1+a";
+		name = target + name.substring(source.length(), name.length());
+		System.out.println(name);
 	}
 }

@@ -1,14 +1,19 @@
 package com.hushunjian.test;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
 
 public class DateTest {
+	
+	private static final  SimpleDateFormat[] FORMATS = new SimpleDateFormat[]{new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"),
+            new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"),
+            new SimpleDateFormat("yyyyMMddHHmm")};
+	
+	public static void main(String[] args) {
+		System.out.println(parseTime("2019-06-18 18:59:40", 1, Calendar.MINUTE));
+	}
 	
 	/*public static String getFirstDayOfWeek(int week) {
 		  Calendar firDay = Calendar.getInstance();
@@ -381,5 +386,24 @@ public class DateTest {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         return calendar.get(Calendar.MONTH) / 3 + 1;
+    }
+    
+    public static String parseTime(String time, int amount, int field) {
+        String parseTime = time;
+        for (SimpleDateFormat format : FORMATS) {
+            try {
+                Date date = format.parse(time);
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(date);
+                if (amount != 0) {
+                    calendar.add(field, amount);
+                }
+                parseTime = format.format(calendar.getTime());
+                return parseTime;
+            } catch (ParseException e) {
+                continue;
+            }
+        }
+        return parseTime;
     }
 }

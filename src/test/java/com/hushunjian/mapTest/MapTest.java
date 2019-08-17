@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
+
 import com.google.common.collect.Maps;
 
 public class MapTest {
@@ -80,5 +82,31 @@ public class MapTest {
 		lista.add("e");
 		lista.forEach(str -> System.out.println(lista.indexOf(str)));
 		System.out.println("==========4==========");
+		Map<String, Integer> map3 = new HashMap<>();
+		for(int i=0;i<3;i++){
+			Integer num = map3.getOrDefault("", 0);
+			num++;
+		}
+		System.out.println(map3.get(""));
+		System.out.println("==========5==========");
+		MapTestDTO dto = new MapTestDTO("1","2","3");
+		Map<String, Object> mapObject = new HashMap<>();
+		mapObject.put("test", dto);
+		Object object = mapObject.get("test");
+		if (object instanceof MapTestDTO) {
+			System.out.println((MapTestDTO)object);
+		}
+		System.out.println("==========5==========");
+		
+		System.out.println("==========6==========");
+		AbstractTestDTO abstractTestDTO = new TestDTO("2");
+		mapObject.put("abstractTest", abstractTestDTO);
+		Object abstractObj = mapObject.get("abstractTest");
+		if (abstractObj instanceof TestDTO) {
+			System.out.println((TestDTO)abstractObj);
+		}
+		System.out.println("==========6==========");
+		
 	}
+	
 }

@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class ListAverage {
 	public static void main(String[] args) {
 		
@@ -49,5 +51,13 @@ public class ListAverage {
 			List<String> l3 = l1.subList(i*2, (i+1)*2 > l1.size()?l1.size():(i+1)*2);
 			System.out.println(l3+"==="+l3.size());
 		}
+		System.out.println("=====================1=====================");
+		for(String s : l1){
+			if (StringUtils.equals(s, "17")) {
+				return;
+			}
+			System.out.println(s);
+		}
+		
 	}
 }

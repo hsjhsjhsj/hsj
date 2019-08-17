@@ -27,5 +27,9 @@ public class BigDecimalTest {
 		if (a1.intValue() == a2) {
 			System.out.println("a1,a2相等");
 		}
+		System.out.println("==========1==========");
+		BigDecimal b1 = BigDecimal.valueOf(0.26);
+		BigDecimal b2 = BigDecimal.ONE;
+		System.out.println(b1.compareTo(b2));
 	}
 }
