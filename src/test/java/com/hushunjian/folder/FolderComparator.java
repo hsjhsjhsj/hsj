@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.Comparator;
 
-public class FolderCompparator implements Comparator<Folder> {
+public class FolderComparator implements Comparator<Folder> {
     @Override
     public int compare(Folder o1, Folder o2) {
         int compare = o1.getPath().compareTo(o2.getPath());

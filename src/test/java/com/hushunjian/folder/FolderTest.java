@@ -29,7 +29,7 @@ public class FolderTest {
     }
 
     public static void main(String[] args) {
-        folders.sort(new FolderCompparator());
+        folders.sort(new FolderComparator());
         folders.forEach(folder -> System.out.println(folder.getPath()));
         System.out.println("--------排序前--------");
         folders.forEach(folder -> System.out.println(folder.getPath()));
