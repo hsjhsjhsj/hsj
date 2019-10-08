@@ -29,7 +29,7 @@ public class RedisService {
     }*/
     
     
-    @Autowired
+    //@Autowired
     private JedisPool jedisPool;
 
     public void set(String key, String value) {

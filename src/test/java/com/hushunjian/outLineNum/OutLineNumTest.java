@@ -46,5 +46,14 @@ public class OutLineNumTest {
 		outLineNumDTOs.forEach(outLineNumDTO -> {
 			System.out.println(outLineNumDTO.getOutLineNum());
 		});
+		System.out.println("------------------3------------------");
+		String outLineNum1 = "1.2.36";
+		if (outLineNum1.contains(".")){
+            String orderStr = outLineNum1.substring(outLineNum1.lastIndexOf(".") + 1);
+            System.out.println(Integer.valueOf(orderStr));
+        } else{
+        	System.out.println(Integer.valueOf(outLineNum1));
+        }
+		System.out.println("------------------4------------------");
 	}
 }

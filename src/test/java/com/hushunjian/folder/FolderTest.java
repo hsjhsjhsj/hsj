@@ -12,13 +12,13 @@ public class FolderTest {
     static {
         folders.add(new Folder("文件夹1111", "文件夹1-文件夹11-文件夹111", "1.1.1.1", 4, 1, "1-1.1-1.1.1"));
         folders.add(new Folder("文件夹11213", "文件夹1-文件夹11-文件夹112-文件夹1121", "1.1.2.1.3", 5, 3, "1-1.1-1.1.2-1.1.2.1"));
-        folders.add(new Folder("文件夹111", "文件夹1-文件夹11", "1.1.1", 3, 1, "1-1.1"));
+        folders.add(new Folder("文件夹111", "文件夹1-文件夹11", "1.1.1", 3, 2, "1-1.1"));
         folders.add(new Folder("文件夹11", "文件夹1", "1.1", 2, 1, "1"));
         folders.add(new Folder("文件夹11113", "文件夹1-文件夹11-文件夹111-文件夹1111", "1.1.1.1.3", 5, 3, "1-1.1-1.1.1-1.1.1.1"));
         folders.add(new Folder("文件夹111110", "文件夹1-文件夹11-文件夹111-文件夹1111", "1.1.1.1.10", 5, 10, "1-1.1-1.1.1-1.1.1.1"));
         folders.add(new Folder("文件夹1121", "文件夹1-文件夹11-文件夹112", "1.1.2.1", 4, 1, "1-1.1-1.1.2"));
         folders.add(new Folder("文件夹11111", "文件夹1-文件夹11-文件夹111-文件夹1111", "1.1.1.1.1", 5, 1, "1-1.1-1.1.1-1.1.1.1"));
-        folders.add(new Folder("文件夹112", "文件夹1-文件夹11", "1.1.2", 3, 2, "1-1.1"));
+        folders.add(new Folder("文件夹112", "文件夹1-文件夹11", "1.1.2", 3, 1, "1-1.1"));
         folders.add(new Folder("文件夹11112", "文件夹1-文件夹11-文件夹111-文件夹1111", "1.1.1.1.2", 5, 2, "1-1.1-1.1.1-1.1.1.1"));
         folders.add(new Folder("文件夹11211", "文件夹1-文件夹11-文件夹112-文件夹1121", "1.1.2.1.1", 5, 1, "1-1.1-1.1.2-1.1.2.1"));
         folders.add(new Folder("文件夹1", "", "1", 1, 1, ""));
@@ -29,6 +29,7 @@ public class FolderTest {
     }
 
     public static void main(String[] args) {
+    	System.out.println("----------------------");
         folders.sort(new FolderCompparator());
         folders.forEach(folder -> System.out.println(folder.getPath()));
         System.out.println("--------排序前--------");

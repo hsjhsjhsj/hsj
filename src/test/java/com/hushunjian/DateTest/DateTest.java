@@ -88,10 +88,13 @@ public class DateTest {
 		SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("yyyyMMddHHmm");
 		Date parse2 = simpleDateFormat2.parse(endTime);
 		System.out.println(parse2);
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-		Date parse = simpleDateFormat.parse(endTime);
-		System.out.println(parse);
 		System.out.println("==========4==========");
+		System.out.println("==========5==========");
+		ZonedDateTime time = ZonedDateTime.now();
+		System.out.println(time);
+		long d = -1L;
+		System.out.println(time.minusDays(d));
+		System.out.println("==========5==========");
 	}
 	
 	

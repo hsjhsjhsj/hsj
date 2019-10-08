@@ -83,5 +83,33 @@ public class StringTest {
 		String path1 = "1.1";
 		String path2 = "1.2.1";
 		System.out.println(path1.compareTo(path2));
+		System.out.println("==========10==========");
+		String name1 = "aaaa";
+		String name2 = "aaaa-bbbb";
+		String substring = name2.substring(name1.length());
+		System.out.println(substring);
+		System.out.println("==========11==========");
+		String oldOutLine = "1.2.1.1.2.1";
+		String reg = "1.2.1";
+		String replacement = "1.3.1";
+		String replaceFirst = oldOutLine.replaceFirst(reg, replacement);
+		System.out.println(replaceFirst);
+		System.out.println("==========12==========");
+		String outLineStr = "1.2.1.1";
+		int indexOf = outLineStr.indexOf(".", 1);
+		System.out.println(indexOf);
+		System.out.println(outLineStr.substring(indexOf));
+		System.out.println("==========13==========");
+		String transformOutLine = transformOutLine(outLineStr);
+		System.out.println(transformOutLine);
+	}
+	
+	public static String transformOutLine(String outLine){
+		String[] split = outLine.split("\\.");
+		StringBuffer transform = new StringBuffer();
+		for (String s : split) {
+			transform.append(String.format("%08d", Integer.valueOf(s))).append(".");
+		}
+		return transform.substring(0, transform.length() - 1);
 	}
 }
