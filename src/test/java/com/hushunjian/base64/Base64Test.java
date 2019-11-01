@@ -20,7 +20,7 @@ public class Base64Test {
 		System.out.println("密码:" + password);
 		String encodeToString = encoder.encodeToString(password.getBytes());
 		System.out.println("加密密码:" + encodeToString);
-		byte[] decode = decoder.decode(encodeToString);
+		byte[] decode = decoder.decode("bnVsbA==");
 		System.out.println("解密密码(不添加字符集指定):" + decode);
 		try {
 			String string = new String(decode, "UTF-8");

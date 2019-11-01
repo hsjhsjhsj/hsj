@@ -102,6 +102,9 @@ public class StringTest {
 		System.out.println("==========13==========");
 		String transformOutLine = transformOutLine(outLineStr);
 		System.out.println(transformOutLine);
+		System.out.println("==========14==========");
+		String path = "1.1.3";
+		System.out.println(path.split("\\.").length);
 	}
 	
 	public static String transformOutLine(String outLine){
