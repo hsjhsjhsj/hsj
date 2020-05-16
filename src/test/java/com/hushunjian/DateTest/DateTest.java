@@ -9,6 +9,7 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -95,7 +96,51 @@ public class DateTest {
 		long d = -1L;
 		System.out.println(time.minusDays(d));
 		System.out.println("==========5==========");
+		System.out.println(ZonedDateTime.now().toString());
+		System.out.println(System.currentTimeMillis());
+		System.out.println("==========6==========");
+		LocalDate monthStart = getMonthStart();
+		System.out.println("start:" + monthStart.toString());
+		LocalDate monthEnd = getMonthEnd();
+		System.out.println("end:" + monthEnd.toString());
+		LocalDateTime dayStart = getDayStart(monthStart);
+		System.out.println("dayStart:" + dayStart.toString());
+		LocalDateTime dayEnd = getDayEnd(monthEnd);
+		System.out.println("dayEnd:" + dayEnd.toString());
+		System.out.println("dayStartZonedDateTime:" + ZonedDateTime.of(dayStart, ZoneId.systemDefault()));
+		System.out.println("dayEndZonedDateTime:" + ZonedDateTime.of(dayEnd, ZoneId.systemDefault()));
+		System.out.println("==========6==========");
+		System.out.println("==========7==========");
+		System.out.println(ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+		System.out.println(ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM")));
+		System.out.println("==========7==========");
+		System.out.println("==========8==========");
+		System.out.println(LocalDate.now().minusMonths(1).withDayOfMonth(26));
+		System.out.println("==========8==========");
+		System.out.println("==========9==========");
+		System.out.println(ZonedDateTime.of(1970, 1, 1, 0, 0, 0, 0, ZoneId.systemDefault()));
+		System.out.println("==========9==========");
+		System.out.println("==========10==========");
+		ZonedDateTime of = ZonedDateTime.of(2020, 3, 31, 16, 0, 0, 0, ZoneId.systemDefault());
+		System.out.println(of.plusHours(8).toLocalDate().toString());
+		System.out.println("==========10==========");
 	}
+	
+    private static LocalDateTime getDayStart(LocalDate time) {
+    	return time.atStartOfDay();
+    }
+
+    private static LocalDateTime getDayEnd(LocalDate time) {
+    	return time.atTime(23, 59, 59);
+    }
+
+    private static LocalDate getMonthStart() {
+        return LocalDate.now().with(TemporalAdjusters.firstDayOfMonth());
+    }
+
+    private static LocalDate getMonthEnd() {
+        return LocalDate.now().with(TemporalAdjusters.lastDayOfMonth());
+    }
 	
 	
 	private void test() throws ParseException{

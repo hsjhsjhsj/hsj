@@ -27,5 +27,9 @@ public class Folder {
         }
         return path.substring(0, path.lastIndexOf("."));
     }
+    
+    Folder(String name) {
+    	this.name = name;
+    }
 
 }

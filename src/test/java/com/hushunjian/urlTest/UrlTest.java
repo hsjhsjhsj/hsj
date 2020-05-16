@@ -10,5 +10,6 @@ public class UrlTest {
 		String sendTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		System.out.println(sendTime);
 		System.out.println(URLEncoder.encode(sendTime, "utf-8"));
+		
 	}
 }
