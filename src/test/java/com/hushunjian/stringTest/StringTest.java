@@ -1,6 +1,12 @@
 package com.hushunjian.stringTest;
 
+import java.text.DecimalFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.temporal.TemporalField;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -83,5 +89,69 @@ public class StringTest {
 		String path1 = "1.1";
 		String path2 = "1.2.1";
 		System.out.println(path1.compareTo(path2));
+		System.out.println("==========10==========");
+		String name1 = "aaaa";
+		String name2 = "aaaa-bbbb";
+		String substring = name2.substring(name1.length());
+		System.out.println(substring);
+		System.out.println("==========11==========");
+		String oldOutLine = "1.2.1.1.2.1";
+		String reg = "1.2.1";
+		String replacement = "1.3.1";
+		String replaceFirst = oldOutLine.replaceFirst(reg, replacement);
+		System.out.println(replaceFirst);
+		System.out.println("==========12==========");
+		String outLineStr = "1.2.1.1";
+		int indexOf = outLineStr.indexOf(".", 1);
+		System.out.println(indexOf);
+		System.out.println(outLineStr.substring(indexOf));
+		System.out.println("==========13==========");
+		String transformOutLine = transformOutLine(outLineStr);
+		System.out.println(transformOutLine);
+		System.out.println("==========14==========");
+		String path = "1.1.3";
+		System.out.println(path.split("\\.").length);
+		System.out.println("==========15==========");
+		Integer value = 78161;
+		System.out.println(String.format("DK%02d+", value));
+		System.out.println("==========16==========");
+		System.out.println("01114".substring(0, 4));
+		System.out.println("==========17==========");
+		List<String> parentPaths = getParentPath("01020304");
+		parentPaths.forEach(str -> System.out.println(str));
+		System.out.println("==========18==========");
+		String in = "1-1-2";
+		System.out.println(in.substring(0, in.indexOf("-")));
+		System.out.println(in.substring(in.indexOf("-") + 1));
+		System.out.println("==========19==========");
+		System.out.println(path.substring(path.lastIndexOf(".") + 1));
+		System.out.println("==========20==========");
+		String outLine = "012036";
+		System.out.println(StringUtils.startsWith(outLine, "01203"));
+		System.out.println("==========21==========");
+		for (int i = 0; i < 10; i++) {
+			System.out.println(i + "==>" + System.nanoTime());
+		}
+		System.out.println("==========22==========");
+		System.out.println(StringUtils.center("", 4, "0"));
+	}
+	
+	public static List<String> getParentPath(String currentPath) {
+		String parentPath = currentPath;
+		List<String> parentPaths = new ArrayList<>();
+        for (int i = 1, len = currentPath.length() / 2; i < len; i++) {
+            parentPath = parentPath.substring(0, parentPath.length() - 2);
+            parentPaths.add(parentPath);
+        }
+        return parentPaths;
+	}
+	
+	public static String transformOutLine(String outLine){
+		String[] split = outLine.split("\\.");
+		StringBuffer transform = new StringBuffer();
+		for (String s : split) {
+			transform.append(String.format("%08d", Integer.valueOf(s))).append(".");
+		}
+		return transform.substring(0, transform.length() - 1);
 	}
 }

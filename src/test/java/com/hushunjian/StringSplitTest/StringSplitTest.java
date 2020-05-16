@@ -10,6 +10,8 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.google.common.collect.Lists;
+
 public class StringSplitTest {
 	public static void main(String[] args) {
 		String s1 = "";
@@ -140,14 +142,34 @@ public class StringSplitTest {
 		String substring = foreignKey.substring(0, foreignKey.indexOf("_"));
 		System.out.println("substring:"+substring);
 		System.out.println("[==============================]");
-		System.out.println("[||||||||||||-10-|||||||||||||||]");
+		System.out.println("[||||||||||||-9-|||||||||||||||]");
 		System.out.println("[==============================]");
 		String foreignKey1 = "c_id";
 		if (foreignKey1.contains("_")) {
 			String substring2 = foreignKey1.substring(foreignKey1.indexOf("_")+1,foreignKey1.length());
 			System.out.println("substring2:"+substring2);
 		}
+		System.out.println("[==============================]");
+		System.out.println("[||||||||||||-10-|||||||||||||||]");
+		System.out.println("[==============================]");
+		String path = "1.2.30.4.50.6.7";
+		getParentPaths(path).forEach(str -> System.out.println(str));
 	}
+	
+	public static List<String> getParentPaths(String path) {
+        List<String> parentPaths = Lists.newArrayList();
+        String[] split = path.split("\\.");
+        if (split.length == 0) {
+            return parentPaths;
+        }
+        String parentPath = split[0];
+        parentPaths.add(parentPath);
+        for (int i = 1; i < split.length - 1; i++) {
+            parentPath = String.format("%s.%s", parentPath, split[i]);
+            parentPaths.add(parentPath);
+        }
+        return parentPaths;
+    }
 	
 	public static Set<String> order(String string){
 		String[] split = string.split(",");

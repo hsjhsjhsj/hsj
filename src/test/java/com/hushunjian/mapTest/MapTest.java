@@ -106,7 +106,12 @@ public class MapTest {
 			System.out.println((TestDTO)abstractObj);
 		}
 		System.out.println("==========6==========");
-		
+		System.out.println("==========7==========");
+		Map<String, String> mapab = new HashMap<>();
+		Map<String, String> mapac = new HashMap<>();
+		mapac.put("key", "value");
+		mapab.putAll(mapac);
+		mapab.putAll(mapac);
 	}
 	
 }

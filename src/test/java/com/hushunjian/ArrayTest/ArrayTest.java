@@ -38,6 +38,12 @@ public class ArrayTest {
 		System.out.println(list.contains("aa"));
 		System.out.println(list.contains("机电施工一标段"));
 		System.out.println(list.indexOf("机电施工一标段") >= 0);
+		System.out.println("==========3==========");
+		Integer[] versionIds = new Integer[5];
+		for(int i = 0; i< 3; i++){
+			versionIds[i] = i;
+		}
+		System.out.println(versionIds.length);
 	}
 	
 	public static void test1(String[] array1){

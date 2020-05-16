@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.assertj.core.util.Lists;
+
 public class TestTest {
 	public static void main(String[] args) {
 		List<String> list = new ArrayList<>();
@@ -33,5 +35,15 @@ public class TestTest {
 		Collections.sort(list2);
 		list2.addAll(list1);
 		list2.forEach(s -> System.out.println(s));
+		System.out.println("=====================1");
+		List<String> outLine = Lists.newArrayList();
+		outLine.add("004");
+		outLine.add("004005");
+		outLine.add("004004004");
+		outLine.add("005");
+		outLine.add("006");
+		outLine.add("007");
+		Collections.sort(outLine);
+		outLine.forEach(o -> System.out.println(o));
 	}
 }
