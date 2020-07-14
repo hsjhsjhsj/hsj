@@ -6,10 +6,14 @@ import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.temporal.TemporalField;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
+
+import com.google.common.collect.Lists;
 
 import net.sf.json.JSONObject;
 
@@ -134,7 +138,42 @@ public class StringTest {
 		}
 		System.out.println("==========22==========");
 		System.out.println(StringUtils.center("", 4, "0"));
+		System.out.println("==========23==========");
+		System.out.println(String.format("%%%s%%", "555"));
+		StringUtils.difference(str1, str2);
+		System.out.println("==========24==========");
+		String code = "50-01.10.10.01";
+		System.out.println(handleCode(code, 1));
+		String r = "\\d\\d-\\d\\d.\\d\\d.\\d\\d.\\d\\d";
+		System.out.println(code.matches(r));
+		System.out.println("==========25==========");
+		long start1 = System.currentTimeMillis();
+		//System.out.println(Double.valueOf(code.replaceAll("-", "").replace(".", "")));
+		for(int i = 0;i<1000000;i++) {
+			String code1 = code;
+			//Double.valueOf(code1.replaceAll("-", "").replace(".", ""));
+		}
+		System.out.println("replace耗时: " + (System.currentTimeMillis() - start1));
+        String regEx="[^0-9]";
+        Pattern p = Pattern.compile(regEx);
+		long start2 = System.currentTimeMillis();
+		System.out.println(Double.valueOf(p.matcher(code).replaceAll("").trim()));
+		for(int i = 0;i<1000000;i++) {
+			String code1 = code;
+			Double.valueOf(p.matcher(code1).replaceAll("").trim());
+		}
+		System.out.println("正则耗时: " + (System.currentTimeMillis() - start2));
+		System.out.println("==========26==========");
+		
 	}
+	
+	public static String handleCode(String code, int level) {
+        String[] split = code.split("\\.");
+        if (split.length == level) {
+            return code;
+        }
+        return StringUtils.join(Arrays.asList(split).subList(0, level), ".");
+    }
 	
 	public static List<String> getParentPath(String currentPath) {
 		String parentPath = currentPath;
