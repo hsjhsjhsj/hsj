@@ -1,0 +1,718 @@
+package com.huagui.newoa.service.impl;
+
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+import com.huagui.common.base.context.ThreadLocalContextAccessor;
+import com.huagui.common.dto.OrgDTO;
+import com.huagui.common.dto.UserInfoDTO;
+import com.huagui.common.enumeration.FileOriginEnum;
+import com.huagui.common.enumeration.InstanceOperationEnum;
+import com.huagui.common.service.UserInfoService;
+import com.huagui.newoa.dao.FlowActDao;
+import com.huagui.newoa.dto.flow.*;
+import com.huagui.newoa.entity.*;
+import com.huagui.newoa.enumeration.FlowActStatus;
+import com.huagui.newoa.enumeration.FlowUserTypeEnum;
+import com.huagui.newoa.enumeration.HandleStatusEnum;
+import com.huagui.newoa.enumeration.NextFlowTaskTypeEnum;
+import com.huagui.newoa.repo.*;
+import com.huagui.newoa.request.flow.*;
+import com.huagui.newoa.service.FlowActService;
+import lombok.extern.slf4j.Slf4j;
+import org.activiti.engine.HistoryService;
+import org.activiti.engine.RepositoryService;
+import org.activiti.engine.RuntimeService;
+import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricActivityInstance;
+import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.impl.RepositoryServiceImpl;
+import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
+import org.activiti.engine.impl.pvm.PvmActivity;
+import org.activiti.engine.impl.pvm.PvmTransition;
+import org.activiti.engine.impl.pvm.process.ActivityImpl;
+import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.task.Task;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.ZonedDateTime;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import static com.huagui.newoa.mapper.FileMapper.FILE_MAPPER;
+import static com.huagui.newoa.mapper.FlowActMapper.FLOW_ACT_MAPPER;
+import static com.huagui.newoa.mapper.FlowMapper.FLOW_MAPPER;
+
+@Slf4j
+@Service
+@Transactional(rollbackFor = Exception.class)
+public class FlowActServiceImpl implements FlowActService {
+
+    /**
+     * 拟稿人固定key
+     */
+    public static final String DRAFT_USER_TASK_KEY = "UserTask_0bmkgwu";
+
+    @Autowired
+    private TaskService taskService;
+
+    @Autowired
+    private HistoryService historyService;
+
+    @Autowired
+    private RepositoryService repositoryService;
+
+    @Autowired
+    private RuntimeService runtimeService;
+
+    @Autowired
+    private FlowTaskUserRepo flowTaskUserRepo;
+
+    @Autowired
+    private FlowTaskRepo flowTaskRepo;
+
+    @Autowired
+    private UserInfoService userInfoService;
+
+    @Autowired
+    private FlowActRepo flowActRepo;
+
+    @Autowired
+    private FlowActUserRepo flowActUserRepo;
+
+    @Autowired
+    private FileRepo fileRepo;
+
+    @Autowired
+    private FlowActHisRepo flowActHisRepo;
+
+    @Autowired
+    private FlowActDao flowActDao;
+
+    @Autowired
+    private FlowSequenceRepo flowSequenceRepo;
+
+    /**
+     * 从字符串中找出数字,例如${flag==1}得到结果1
+     */
+    private final Pattern pattern = Pattern.compile("\\d+");
+
+    @Override
+    public Task findTask(String flowId, String userTaskKey) {
+        List<Task> tasks = taskService.createTaskQuery().processInstanceBusinessKey(flowId).list();
+        return tasks.stream().filter(task -> StringUtils.equals(task.getId(), userTaskKey)).findFirst().orElse(null);
+    }
+
+    @Override
+    public ActivityImpl getTaskActivity(String processDefinitionId, String taskDefinitionKey) {
+        if (StringUtils.isAnyBlank(processDefinitionId, taskDefinitionKey)) {
+            return null;
+        }
+        ProcessDefinition definition = repositoryService.createProcessDefinitionQuery().processDefinitionKey(processDefinitionId).singleResult();
+        if (definition == null) {
+            return null;
+        }
+        ProcessDefinitionEntity process = (ProcessDefinitionEntity) ((RepositoryServiceImpl) repositoryService).getDeployedProcessDefinition(definition.getId());
+        if (process == null) {
+            return null;
+        }
+        List<ActivityImpl> activities = process.getActivities();
+        return activities.stream().filter(act -> StringUtils.equals(act.getId(), taskDefinitionKey)).findFirst().orElse(null);
+    }
+
+    private boolean isGateWay(String value) {
+        return outType(value, NextFlowTaskTypeEnum.EXCLUSIVE_GATE_WAY, NextFlowTaskTypeEnum.PARALLEL_GATE_WAY);
+    }
+
+    private String condition(PvmTransition transition) {
+        String condition = "";
+        Object conditionText = transition.getProperty("conditionText");
+        if (conditionText != null) {
+            condition = conditionText.toString();
+            Matcher matcher = pattern.matcher(condition);
+            if (matcher.find()) {
+                condition = matcher.group();
+            }
+        }
+        return condition;
+    }
+
+    private String sequenceName(PvmTransition transition) {
+        Object name = transition.getProperty("name");
+        if (name != null) {
+            return name.toString();
+        }
+        return "通过";
+    }
+
+    @Override
+    public List<SequenceTaskDTO> nextInfo(NextFlowTaskTypeEnum outType, List<PvmTransition> outs, String flowId, String actCreator) {
+        List<PvmTransition> outSequences = Lists.newArrayList();
+        if (outType == NextFlowTaskTypeEnum.EXCLUSIVE_GATE_WAY) {
+            // 排他网关
+            for (PvmTransition out : outs) {
+                outSequences.addAll(out.getDestination().getOutgoingTransitions());
+            }
+        } else {
+            outSequences = outs;
+        }
+        Map<PvmTransition, List<PvmTransition>> sequenceTaskMap = outSequences.stream().collect(Collectors.toMap(out -> out, this::nextUserTasks));
+        List<String> sequenceKeys = Lists.newArrayList();
+        List<String> userTaskKeys = Lists.newArrayList();
+        sequenceTaskMap.forEach((sequence, tasks) -> {
+            sequenceKeys.add(sequence.getId());
+            tasks.forEach(task -> userTaskKeys.add(task.getDestination().getId()));
+        });
+        // 线信息
+        List<FlowSequenceEntity> sequences = flowSequenceRepo.findByFlowIdAndSequenceKeyIn(flowId, sequenceKeys);
+        Map<String, FlowSequenceEntity> sequenceMap = sequences.stream().collect(Collectors.toMap(FlowSequenceEntity::getSequenceKey, sequence -> sequence));
+        // 任务信息
+        List<FlowTaskEntity> userTasks = flowTaskRepo.findByFlowIdAndUserTaskKeyIn(flowId, userTaskKeys);
+        Map<String, FlowTaskEntity> taskMap = userTasks.stream().collect(Collectors.toMap(FlowTaskEntity::getUserTaskKey, task -> task));
+        // 任务处理人信息
+        List<FlowTaskUserEntity> taskUsers = flowTaskUserRepo.findByFlowIdAndUserTaskKeyIn(flowId, userTaskKeys);
+        Map<String, List<FlowTaskUserEntity>> taskKeyUserMap = Maps.newHashMap();
+        Set<String> roleIds = Sets.newHashSet();
+        taskUsers.forEach(taskUser -> {
+            if (taskUser.getFlowUserType() == FlowUserTypeEnum.ROLE) {
+                roleIds.add(taskUser.getRelationId());
+            }
+            taskKeyUserMap.computeIfAbsent(taskUser.getUserTaskKey(), v -> Lists.newArrayList()).add(taskUser);
+        });
+        // 从user服务中获取角色下的用户id
+        Map<String, List<String>> roleUserMap = userInfoService.findRoleUser(roleIds);
+        // 处理数据
+        List<SequenceTaskDTO> sequenceTasks = Lists.newArrayList();
+        sequenceTaskMap.forEach((transition, tasks) -> {
+            FlowSequenceEntity sequence = sequenceMap.get(transition.getId());
+            String businessState = null;
+            boolean isPass = true;
+            if (sequence != null) {
+                businessState = sequence.getBusinessState();
+                isPass = sequence.getIsPass();
+            }
+            sequenceTasks.add(new SequenceTaskDTO(condition(transition), sequenceName(transition), transition.getId(), businessState, isPass, nextInfo(tasks, taskMap, taskKeyUserMap, roleUserMap, actCreator)));
+        });
+        // 排序, 通过放到前面
+        sequenceTasks.sort(Comparator.comparing(SequenceTaskDTO::getIsPass).reversed());
+        return sequenceTasks;
+    }
+
+    private List<FlowTaskInfoDTO> nextInfo(List<PvmTransition> tasks, Map<String, FlowTaskEntity> taskMap, Map<String, List<FlowTaskUserEntity>> taskKeyUserMap,
+                                           Map<String, List<String>> roleUserMap, String actCreator) {
+        List<FlowTaskInfoDTO> result = Lists.newArrayList();
+        tasks.forEach(task -> {
+            String userTaskKey = task.getDestination().getId();
+            FlowTaskDTO flowTask = FLOW_MAPPER.toFlowTaskDTO(taskMap.get(userTaskKey));
+            List<UserInfoDTO> users = Lists.newArrayList();
+            if (StringUtils.startsWith(userTaskKey, "EndEvent")) {
+                flowTask = new FlowTaskDTO();
+                flowTask.setUserTaskKey(userTaskKey);
+                flowTask.setName("结束");
+            } else {
+                if (flowTask == null) {
+                    return;
+                }
+                List<FlowTaskUserEntity> taskKeyUsers = taskKeyUserMap.get(flowTask.getUserTaskKey());
+                Map<String, Set<Boolean>> userCcMap = Maps.newHashMap();
+                if (CollectionUtils.isNotEmpty(taskKeyUsers)) {
+                    List<FlowTaskUserDTO> flowTaskUsers = Lists.newArrayList();
+                    for (FlowTaskUserEntity taskUser : taskKeyUsers) {
+                        flowTaskUsers.add(FLOW_MAPPER.toFlowTaskUserDTO(taskUser));
+                        switch (taskUser.getFlowUserType()) {
+                            case ROLE:
+                                // 角色
+                                List<String> roleUsers = roleUserMap.get(taskUser.getRelationId());
+                                if (CollectionUtils.isNotEmpty(roleUsers)) {
+                                    roleUsers.forEach(userId -> userCcMap.computeIfAbsent(userId, v -> Sets.newHashSet()).add(taskUser.getIsCc()));
+                                }
+                                break;
+                            case ORG_ADMIN:
+                                // 组织管理员
+                                OrgDTO org = userInfoService.findCacheOrg(taskUser.getRelationId());
+                                if (org != null && StringUtils.isNotBlank(org.getAdminId())) {
+                                    userCcMap.computeIfAbsent(org.getAdminId(), v -> Sets.newHashSet()).add(taskUser.getIsCc());
+                                }
+                                break;
+                            case SUBMITTER:
+                                // 流程提交人
+                                userCcMap.computeIfAbsent(actCreator, v -> Sets.newHashSet()).add(taskUser.getIsCc());
+                                break;
+                            default:
+                                // 用户
+                                userCcMap.computeIfAbsent(taskUser.getRelationId(), v -> Sets.newHashSet()).add(taskUser.getIsCc());
+                        }
+                    }
+                    userCcMap.forEach((userId, cc) -> {
+                        UserInfoDTO user = userInfoService.findCacheUser(userId);
+                        if (user != null) {
+                            // false表示处理 -> 重复的情况下,有处理就是处理
+                            user.setIsCc(!cc.contains(false));
+                            users.add(user);
+                        }
+                    });
+                    flowTask.setFlowTaskUserList(flowTaskUsers);
+                }
+                if (!flowTask.getIsChangeUser() && users.stream().allMatch(UserInfoDTO::getIsCc)) {
+                    // 不允许选择用户,但没有处理人,强制设置成允许选人
+                    flowTask.setIsChangeUser(true);
+                }
+            }
+            result.add(new FlowTaskInfoDTO(flowTask, users));
+        });
+        return result;
+    }
+
+    private List<PvmTransition> nextUserTasks(PvmTransition... outs) {
+        List<PvmTransition> result = Lists.newArrayList();
+        for (PvmTransition out : outs) {
+            PvmActivity destination = out.getDestination();
+            String value = destination.getProperty("type").toString();
+            if (isGateWay(value)) {
+                destination.getOutgoingTransitions().forEach(next -> result.addAll(nextUserTasks(next)));
+            } else {
+                result.add(out);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public Map<String, String> batchStartAct(BatchStartReq req, FlowEntity flow) {
+        String curUserId = ThreadLocalContextAccessor.getUserID();
+        Map<String, Object> variables = resetVariables(flow.getId());
+        Map<String, FlowActEntity> businessActMap = Maps.newHashMap();
+        Map<String, String> result = Maps.newHashMap();
+        req.getBusinessIds().forEach(businessId -> {
+            // 开启一个新的工作流
+            ProcessInstance instance = runtimeService.startProcessInstanceByKey(flow.getProcessId(), businessId, variables);
+            FlowActEntity act = FLOW_ACT_MAPPER.toFlowActEntity(flow.getId(), req.getFlowDes(), flow.getModel(), flow.getName(), curUserId, instance.getId(), businessId, req.getActTitle(), req.getBusinessCode(), ZonedDateTime.now(), req.getParentProjectId());
+            act.setFlowActStatus(FlowActStatus.HANDLING);
+            businessActMap.put(businessId, act);
+        });
+        // 批量保存
+        flowActRepo.saveAll(businessActMap.values());
+        // 批量设置第一步拟稿处理信息
+        List<FlowActUserEntity> draftTaskUsers = Lists.newArrayList();
+        // 任务处理人
+        List<FlowActUserEntity> actUsers = Lists.newArrayList();
+        businessActMap.forEach((businessId, act) -> {
+            Task draftTask = taskService.createTaskQuery().processInstanceId(act.getFlowInstanceId()).active().singleResult();
+            draftTaskUsers.add(FLOW_ACT_MAPPER.toFlowActUserEntity(act.getId(), HandleStatusEnum.HANDLING, true, draftTask.getName(), draftTask.getTaskDefinitionKey(), false, curUserId, String.valueOf(System.currentTimeMillis())));
+            result.put(businessId, act.getId());
+            // 走到下一步
+            // 设置处理人
+            draftTask.setAssignee(curUserId);
+            // 完成拟稿任务
+            taskService.complete(draftTask.getId(), Map.of("flag", req.getCondition()));
+            // 保存下一步处理人
+            handleUser(req.getTaskUsers(), actUsers, act.getId());
+        });
+        // 保存下一步任务处理人
+        flowActUserRepo.saveAll(actUsers);
+        // 批量处理第一步
+        Map<FlowActUserEntity, FlowActHisEntity> draftHisMap = Maps.newHashMap();
+        draftTaskUsers.forEach(draftTaskUser -> {
+            // 添加操作历史记录
+            draftHisMap.put(draftTaskUser, FLOW_ACT_MAPPER.toFlowActHisEntity(draftTaskUser, req.getOpinion(), req.getSequenceName(), HandleStatusEnum.DONE));
+        });
+        // 保存操作记录
+        flowActHisRepo.saveAll(draftHisMap.values());
+        // 保存附件
+        if (CollectionUtils.isNotEmpty(req.getFiles())) {
+            List<FileEntity> files = Lists.newArrayList();
+            // 附件表添加记录
+            draftHisMap.forEach((draft, his) -> req.getFiles().forEach(file -> files.add(FILE_MAPPER.toFileEntity(file, his.getId(), draft.getFlowActId(), FileOriginEnum.OA_FLOW_FILE))));
+            fileRepo.saveAll(files);
+        }
+        return result;
+    }
+
+    private Pair<List<String>, List<String>> handleUser(List<TaskUserReq> taskUsers, List<FlowActUserEntity> actUsers, String actId) {
+        List<String> userTaskKeys = Lists.newArrayList();
+        List<String> userIds = Lists.newArrayList();
+        taskUsers.forEach(taskUser -> {
+            userTaskKeys.add(taskUser.getUserTaskKey());
+            // 时间戳纳秒值,可以保证唯一,可以用于排序
+            String userTaskTag = String.valueOf(System.nanoTime());
+            // 处理人
+            taskUser.getHandleUserIds().forEach(userId -> actUsers.add(FLOW_ACT_MAPPER.toFlowActUserEntity(actId, HandleStatusEnum.HANDLING, taskUser.getIsAnd(), taskUser.getFlowTaskName(), taskUser.getUserTaskKey(), false, userId, userTaskTag)));
+            userIds.addAll(taskUser.getHandleUserIds());
+            // 抄送人
+            if (CollectionUtils.isNotEmpty(taskUser.getCcUserIds())) {
+                userIds.addAll(taskUser.getCcUserIds());
+                taskUser.getCcUserIds().forEach(userId -> actUsers.add(FLOW_ACT_MAPPER.toFlowActUserEntity(actId, HandleStatusEnum.HANDLING, taskUser.getIsAnd(), taskUser.getFlowTaskName(), taskUser.getUserTaskKey(), true, userId, userTaskTag)));
+            }
+        });
+        return Pair.of(userTaskKeys, userIds);
+    }
+
+    private Map<String, Object> resetVariables(String flowId) {
+        // 获取流程的任务节点
+        List<FlowTaskEntity> flowTasks = flowTaskRepo.findByFlowId(flowId);
+        Map<String, Object> variables = Maps.newHashMap();
+        flowTasks.forEach(task -> variables.put(task.getUserTaskKey(), null));
+        return variables;
+    }
+
+    @Override
+    public String startAct(StartActReq req, FlowEntity flow) {
+        String curUserId = ThreadLocalContextAccessor.getUserID();
+        Map<String, Object> variables = resetVariables(flow.getId());
+        // 开启一个新的工作流
+        ProcessInstance instance = runtimeService.startProcessInstanceByKey(flow.getProcessId(), req.getBusinessId(), variables);
+        FlowActEntity act = FLOW_ACT_MAPPER.toFlowActEntity(flow.getId(), req.getFlowDes(), flow.getModel(), flow.getName(), curUserId, instance.getId(), req.getBusinessId(), req.getActTitle(), req.getBusinessCode(), ZonedDateTime.now(), req.getParentProjectId());
+        flowActRepo.save(act);
+        // 设置当前用户为拟稿任务节点的处理人,拟稿后面可能排他,需要用户指定,不能直接完成
+        // 仅适用于开始后面紧跟着的是拟稿时的查询,只会返回一个
+        Task draftTask = taskService.createTaskQuery().processInstanceId(act.getFlowInstanceId()).active().singleResult();
+        FlowActUserEntity draftTaskUser = FLOW_ACT_MAPPER.toFlowActUserEntity(act.getId(), HandleStatusEnum.HANDLING, true, draftTask.getName(), draftTask.getTaskDefinitionKey(), false, curUserId, String.valueOf(System.currentTimeMillis()));
+        flowActUserRepo.save(draftTaskUser);
+        return act.getId();
+    }
+
+    @Override
+    public FlowActEntity findById(String id) {
+        return flowActRepo.getById(id);
+    }
+
+    @Override
+    public void settingHandleUser(FlowActEntity act, HandleUserReq req) {
+        List<FlowActUserEntity> actUsers = Lists.newArrayList();
+        // 设置处理人
+        Pair<List<String>, List<String>> pair = handleUser(req.getTaskUsers(), actUsers, act.getId());
+        // 删除掉当前这些任务节点里面已存在的用户信息,保证一个实例的一个任务里面一个用户只会有一次
+        flowActUserRepo.deleteByFlowActIdAndUserTaskKeyInAndUserIdIn(act.getId(), pair.getLeft(), pair.getRight());
+        // 保存新的
+        flowActUserRepo.saveAll(actUsers);
+    }
+
+    @Override
+    public FlowActUserEntity findUserActTask(String actId, String userTaskKey, String userId) {
+        return flowActUserRepo.findByFlowActIdAndUserTaskKeyAndUserId(actId, userTaskKey, userId);
+    }
+
+    @Override
+    public Task findInstanceActivityTask(String instanceId, String userTaskKey) {
+        return taskService.createTaskQuery().processInstanceId(instanceId).active().taskDefinitionKey(userTaskKey).singleResult();
+    }
+
+    @Override
+    public void handle(FlowActEntity act, FlowActUserEntity actUser, HandleReq req, boolean last) {
+        HandleStatusEnum hisHandStatus = HandleStatusEnum.DONE;
+        if (actUser.getIsCc()) {
+            // 抄送人 -> 已阅
+            hisHandStatus = HandleStatusEnum.READ;
+        } else {
+            // 拟稿 -> 已提交
+            if (StringUtils.equals(req.getUserTaskKey(), DRAFT_USER_TASK_KEY)) {
+                hisHandStatus = HandleStatusEnum.SUBMITTED;
+                // 更新提交时间
+                act.setSubmitTime(ZonedDateTime.now());
+            } else {
+                // 最后一个处理人选择了驳回 -> 已驳回
+                if (last && StringUtils.isNotBlank(req.getSequenceKey())) {
+                    FlowSequenceEntity sequence = flowSequenceRepo.findByFlowIdAndSequenceKey(act.getFlowId(), req.getSequenceKey());
+                    if (sequence != null && !sequence.getIsPass()) {
+                        hisHandStatus = HandleStatusEnum.REJECTED;
+                    }
+                }
+            }
+        }
+        // 历史表添加记录
+        FlowActHisEntity his = FLOW_ACT_MAPPER.toFlowActHisEntity(actUser, req.getOpinion(), req.getSequenceName(), hisHandStatus);
+        flowActHisRepo.save(his);
+        // 附件表添加记录
+        if (CollectionUtils.isNotEmpty(req.getFiles())) {
+            List<FileEntity> files = Lists.newArrayList();
+            req.getFiles().forEach(file -> files.add(FILE_MAPPER.toFileEntity(file, his.getId(), actUser.getFlowActId(), FileOriginEnum.OA_FLOW_FILE)));
+            fileRepo.saveAll(files);
+        }
+        // 已完成则删除掉
+        flowActUserRepo.delete(actUser);
+    }
+
+    @Override
+    public void handle(FlowActEntity act, FlowActUserEntity actUser, HandleReq req, Task task, boolean last) {
+        // 处理信息
+        handle(act, actUser, req, last);
+        // 如果只是抄送用户(阅知操作),不影响流程|如果不是当前任务最后的处理人,不需要处理流程相关
+        if (actUser.getIsCc() || !last) {
+            return;
+        }
+        // 判断是多人与/多人或
+        if (!actUser.getIsAnd()) {
+            // 多人或 -> 一人处理完则将其他人的处理任务删除
+            flowActUserRepo.deleteByFlowActIdAndUserTaskKeyAndIsCc(act.getId(), actUser.getUserTaskKey(), false);
+        }
+        // 设置处理人
+        task.setAssignee(ThreadLocalContextAccessor.getUserID());
+        // 完成任务
+        taskService.complete(task.getId(), Map.of("flag", req.getCondition()));
+        // 判断流程实例是否还在运行中
+        ProcessInstance instance = runtimeService.createProcessInstanceQuery().processInstanceId(act.getFlowInstanceId()).singleResult();
+        if (instance == null) {
+            act.setFlowActStatus(FlowActStatus.DONE);
+            act.setDoneTime(ZonedDateTime.now());
+        } else {
+            act.setFlowActStatus(FlowActStatus.HANDLING);
+        }
+    }
+
+    @Override
+    public List<FlowActUserEntity> findActTaskUser(String actId, String userTaskKey) {
+        return flowActUserRepo.findByFlowActIdAndUserTaskKey(actId, userTaskKey);
+    }
+
+    @Override
+    public List<FlowActHisDTO> findActHis(String actId) {
+        List<FlowActHisEntity> actHis = flowActHisRepo.findByFlowActId(actId);
+        if (CollectionUtils.isEmpty(actHis)) {
+            return Lists.newArrayList();
+        }
+        // 找出历史中所有的附件
+        List<String> hisIds = actHis.stream().map(FlowActHisEntity::getId).collect(Collectors.toList());
+        List<FileEntity> files = fileRepo.findByRelationIdIn(hisIds);
+        Map<String, List<FileEntity>> hisFilesMap = files.stream().collect(Collectors.groupingBy(FileEntity::getRelationId));
+        List<FlowActHisDTO> flowActHis = Lists.newArrayList();
+        // 从流程历史中获取完成的
+        actHis.forEach(his -> flowActHis.add(FLOW_ACT_MAPPER.toFlowActHisDTO(his, hisFilesMap.get(his.getId()), his.getHandleStatus(), userInfoService.findCacheUserName(his.getUserId()))));
+        // 已完成的按照创建时间排在前面
+        flowActHis.sort(Comparator.comparing(FlowActHisDTO::getCreatedTime));
+        // 从任务人员中获取待处理的(待处理的加到后面)
+        List<FlowActUserEntity> handleUsers = flowActUserRepo.findByFlowActId(actId);
+        handleUsers.forEach(user -> {
+            HandleStatusEnum todoHandle = HandleStatusEnum.HANDLING;
+            if (user.getIsCc()) {
+                // 抄送 -> 待阅
+                todoHandle = HandleStatusEnum.TO_BE_READ;
+            }
+            flowActHis.add(FLOW_ACT_MAPPER.toFlowActHisDTO(user, userInfoService.findCacheUserName(user.getUserId()), todoHandle));
+        });
+        return flowActHis;
+    }
+
+    @Override
+    public FlowActUserEntity findUnDoneActUser(String actId, String userId, String userTaskKey) {
+        // 一个用户在一个实例中的一个任务节点只会存在一个待办的
+        return flowActUserRepo.findByFlowActIdAndUserIdAndUserTaskKey(actId, userId, userTaskKey);
+    }
+
+    @Override
+    public Page<TodoDTO> queryTodo(QueryTodoReq req) {
+        String curUserId = ThreadLocalContextAccessor.getUserID();
+        Pageable pageable = PageRequest.of(req.getPage() - 1, req.getSize());
+        HandleStatusEnum handleStatus = null;
+        FlowActStatus flowActStatus = null;
+        ZonedDateTime doneTime = null;
+        switch (req.getType()) {
+            case TODO:
+                // 待办事项->需要我处理的
+                handleStatus = HandleStatusEnum.HANDLING;
+                break;
+            case HANDLING:
+                // 处理中->我处理完的,其他人还在处理中的->我处理完的,流程实例没有结束的
+                handleStatus = HandleStatusEnum.DONE;
+                flowActStatus = FlowActStatus.HANDLING;
+                break;
+            case FINISHED:
+                // 近期完成->一个月内流程完成的->我处理完的,流程实例结束的
+                handleStatus = HandleStatusEnum.DONE;
+                flowActStatus = FlowActStatus.DONE;
+                doneTime = ZonedDateTime.now().minusMonths(1);
+                break;
+            default:
+                break;
+        }
+        Page<TodoDTO> todo = flowActDao.findTodo(pageable, curUserId, handleStatus, flowActStatus, doneTime);
+        todo.getContent().forEach(to -> to.setSubmitUserName(userInfoService.findCacheUserName(to.getSubmitUserId())));
+        return todo;
+    }
+
+    @Override
+    public Page<TodoDTO> queryTodoV2(QueryTodoReq req) {
+        String curUserId = ThreadLocalContextAccessor.getUserID();
+        Pageable pageable = PageRequest.of(req.getPage() - 1, req.getSize());
+        Pair<List<TodoDTO>, Long> pair = flowActDao.queryTodoV2(req.getType(), curUserId, pageable);
+        // 拼信息
+        List<TodoDTO> result = Lists.newArrayList();
+        Map<String, List<TodoDTO>> actTaskMap = pair.getLeft().stream().collect(Collectors.groupingBy(TodoDTO::actTask));
+        actTaskMap.forEach((actTask, todo) -> {
+            TodoDTO to = todo.get(0);
+            StringBuilder nameBuilder = new StringBuilder();
+            StringBuilder idBuilder = new StringBuilder();
+            todo.forEach(t -> {
+                nameBuilder.append(userInfoService.findCacheUserName(t.getUserId())).append(",");
+                idBuilder.append(t.getId() == null ? "" : t.getId()).append(",");
+            });
+            // 任务id
+            to.setId(idBuilder.substring(0, idBuilder.length() - 1));
+            // 处理人
+            to.setUserNameStr(nameBuilder.substring(0, nameBuilder.length() - 1));
+            // 提交人
+            to.setSubmitUserName(userInfoService.findCacheUserName(to.getSubmitUserId()));
+            // 发起人
+            to.setPublisherName(userInfoService.findCacheUserName(to.getPublisherId()));
+            result.add(to);
+        });
+        // 提交时间倒序
+        result.sort(Comparator.comparing(TodoDTO::getSubmitTime).reversed());
+        return new PageImpl<>(result, pageable, pair.getRight());
+    }
+
+    @Override
+    public FlowActEntity findByBusinessId(String businessId) {
+        return flowActRepo.findByBusinessId(businessId);
+    }
+
+    @Override
+    public List<FlowActEntity> findByBusinessIds(List<String> businessIds) {
+        return flowActRepo.findByBusinessIdIn(businessIds);
+    }
+
+    @Override
+    public FlowActUserEntity findActFirstTask(String actId) {
+        // 当前用户在实例下最早创建的待处理的
+        return flowActUserRepo.findFirstByFlowActIdAndUserIdOrderByCreatedTimeAsc(actId, ThreadLocalContextAccessor.getUserID());
+    }
+
+    @Override
+    public BusinessActInfoDTO findBusinessActInfo(FlowActEntity act) {
+        // 查询流程的处理人
+        List<FlowActUserEntity> actUsers = flowActUserRepo.findByFlowActIdAndIsCc(act.getId(), false);
+        Map<String, List<UserInfoDTO>> taskUsers = Maps.newHashMap();
+        Set<String> curTasks = Sets.newHashSet();
+        actUsers.forEach(actUser -> {
+            taskUsers.computeIfAbsent(actUser.getUserTaskKey(), v -> Lists.newArrayList()).add(userInfoService.findCacheUser(actUser.getUserId()));
+            curTasks.add(actUser.getUserTaskKey());
+        });
+        return new BusinessActInfoDTO(FLOW_ACT_MAPPER.toFlowActDTO(act), taskUsers, curTasks);
+    }
+
+    @Override
+    public FlowActUserEntity findActUserTask(String actUserTaskId) {
+        return flowActUserRepo.getById(actUserTaskId);
+    }
+
+    @Override
+    public ProcessInstance getInstance(String instanceId) {
+        return runtimeService.createProcessInstanceQuery().processInstanceId(instanceId).singleResult();
+    }
+
+    private boolean outType(String value, NextFlowTaskTypeEnum... types) {
+        String[] values = new String[types.length];
+        for (int i = 0; i < types.length; i++) {
+            values[i] = types[i].getValue();
+        }
+        return StringUtils.equalsAny(value, values);
+    }
+
+    @Override
+    public List<Task> getInstanceActiveTasks(String instanceId) {
+        return taskService.createTaskQuery().processInstanceId(instanceId).active().list();
+    }
+
+    @Override
+    public boolean isActLastHandle(String actId, String userTaskKey) {
+        return flowActUserRepo.countByFlowActIdAndUserTaskKeyAndIsCc(actId, userTaskKey, false) == 1;
+    }
+
+    @Override
+    public boolean checkFlowTasks(String flowId, List<String> tasks) {
+        return flowTaskRepo.countByFlowIdAndUserTaskKeyIn(flowId, tasks) != tasks.size();
+    }
+
+    @Override
+    public void transferHandleUser(FlowActUserEntity actUser, String userId) {
+        // 保存新的操作人信息
+        FlowActUserEntity transferUser = FLOW_ACT_MAPPER.copyActUser(actUser, userId);
+        flowActUserRepo.save(transferUser);
+        // 历史表添加记录
+        String title = String.format("转给[%s]处理", userInfoService.findCacheUserName(userId));
+        FlowActHisEntity his = FLOW_ACT_MAPPER.toFlowActHisEntity(actUser, title, title, HandleStatusEnum.TRANSFER);
+        flowActHisRepo.save(his);
+        // 删除掉信息
+        flowActUserRepo.delete(actUser);
+    }
+
+    @Override
+    public Map<String, FlowActUserEntity> findUserActMinTask(String userId, Collection<String> actIds) {
+        // 查询用户在这些实例里面最早需要处理的任务
+        return flowActDao.findUserActOperation(userId, actIds);
+    }
+
+    @Override
+    public Map<String, InstanceOperationEnum> findUserActTasks(String userId, Collection<String> actIds) {
+        List<FlowActUserEntity> actUsers = flowActUserRepo.findByFlowActIdInAndUserId(actIds, userId);
+        // Map<String, Map<HandleStatusEnum, List<FlowActUserEntity>>> map = actUsers.stream().collect(Collectors.groupingBy(FlowActUserEntity::getFlowActId, Collectors.groupingBy(FlowActUserEntity::getHandleStatus)));
+        Map<String, InstanceOperationEnum> result = Maps.newHashMap();
+        Map<String, Map<HandleStatusEnum, List<FlowActUserEntity>>> map = Maps.newHashMap();
+        map.forEach((actId, statusUserMap) -> {
+            List<FlowActUserEntity> handingTasks = statusUserMap.get(HandleStatusEnum.HANDLING);
+            if (CollectionUtils.isEmpty(handingTasks)) {
+                // 没有待处理的任务了,只是相关人员
+                result.put(actId, InstanceOperationEnum.RELEVANT);
+            } else {
+                // 还有待处理的任务,按照任务的创建时间排,找最早创建的一个
+                if (handingTasks.size() != 1) {
+                    handingTasks.sort(Comparator.comparing(FlowActUserEntity::getCreatedTime));
+                }
+                FlowActUserEntity minTask = handingTasks.get(0);
+                // 当前要处理的任务是拟稿,则一定是提交人
+                if (StringUtils.equals(minTask.getUserTaskKey(), DRAFT_USER_TASK_KEY)) {
+                    result.put(actId, InstanceOperationEnum.SUBMIT);
+                } else {
+                    // 抄送
+                    if (minTask.getIsCc()) {
+                        result.put(actId, InstanceOperationEnum.READ);
+                    } else {
+                        result.put(actId, InstanceOperationEnum.HANDLE);
+                    }
+                }
+            }
+        });
+        return result;
+    }
+
+    @Override
+    public List<String> test(String instanceId) {
+        ProcessInstance instance = runtimeService.createProcessInstanceQuery().processInstanceId(instanceId).singleResult();
+        if (instance == null) {
+            return Lists.newArrayList();
+        }
+        // 历史活动
+        List<HistoricActivityInstance> finished = historyService.createHistoricActivityInstanceQuery().processInstanceId(instanceId).finished().list();
+        finished.forEach(activity -> {
+            activity.getActivityName();
+        });
+        List<HistoricActivityInstance> unfinished = historyService.createHistoricActivityInstanceQuery().processInstanceId(instanceId).unfinished().list();
+        unfinished.forEach(activity -> {
+            activity.getActivityName();
+        });
+        // 历史任务
+        List<HistoricTaskInstance> finishedTasks = historyService.createHistoricTaskInstanceQuery().processInstanceId(instanceId).finished().list();
+        finishedTasks.forEach(task -> {
+            task.getProcessDefinitionId();
+        });
+        List<HistoricTaskInstance> unfinishedTasks = historyService.createHistoricTaskInstanceQuery().processInstanceId(instanceId).unfinished().list();
+        unfinishedTasks.forEach(task -> {
+            task.getProcessDefinitionId();
+        });
+
+        List<Task> tasks = taskService.createTaskQuery().processInstanceId(instanceId).active().list();
+
+        return tasks.stream().map(Task::getName).collect(Collectors.toList());
+    }
+}
