@@ -7,8 +7,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections.bag.SynchronizedSortedBag;
-
 public class FolderTest {
 
     private static final List<Folder> folders = Lists.newArrayList();
@@ -36,7 +34,6 @@ public class FolderTest {
 
     public static void main(String[] args) {
     	System.out.println("----------------------");
-        folders.sort(new FolderCompparator());
         folders.forEach(folder -> System.out.println(folder.getPath()));
         System.out.println("--------排序前--------");
         folders.forEach(folder -> System.out.println(folder.getPath()));

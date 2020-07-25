@@ -1,0 +1,15 @@
+docker 安装 redis
+1:下载最新版本的redis
+docker pull redis
+2:下载redis.conf配置文件
+wget http://download.redis.io/redis-stable/redis.conf
+3:启动
+docker run -p 6379:6379 --name redis --privileged=true -v /usr/local/docker/redis/conf/redis.conf:/etc/redis/redis.conf -v /usr/local/docker/redis/data:/data -d redis redis-server /etc/redis/redis.conf
+4:设置外网可连接访问
+注释掉bind 127.0.0.1, 修改protected-mode no
+5:重启容器
+docker restart redis
+
+
+
+
